@@ -107,6 +107,9 @@ $script = <<SCRIPT
  	#echo "[vagrant provisioning] Pulling Docker Containers..."
  	#sudo docker pull wnameless/oracle-xe-11g
 	#sudo docker pull tomcat
+
+	#Remove light-locker
+	sudo apt-get remove light-locker
 	
 	#Hostname
 	echo "[vagrant provisioning] Setting hostname..."
