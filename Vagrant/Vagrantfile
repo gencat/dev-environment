@@ -1,0 +1,141 @@
+$script = <<SCRIPT
+	#!/bin/bash
+
+	# Server name
+	HOSTNAME="CanigoDev"
+
+	#new repos
+	echo "[vagrant provisioning] Adding repositories..."
+	sudo apt-get install software-properties-common -y
+	sudo add-apt-repository -y ppa:webupd8team/java
+	sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+	sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+	sudo apt-get update
+
+	#System
+	echo "[vagrant provisioning] Installing VirtualBox..."
+	sudo apt-get install -y lubuntu-desktop virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 xinit
+
+	#Chrome
+	echo "[vagrant provisioning] Installing Chrome..."
+	sudo apt-get install -y google-chrome-stable
+
+	#Java
+	echo "[vagrant provisioning] Installing Java..."
+	# automatic install of the Oracle JDK 7
+	echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+	sudo apt-get -y install oracle-java7-set-default
+	export JAVA_HOME="/usr/lib/jvm/java-7-oracle/jre"
+
+	#Docker and compose
+	echo "[vagrant provisioning] Installing Docker..."
+	sudo wget -qO- https://get.docker.com/ | sh
+	#sudo apt-get install -y docker.io
+	sudo systemctl start docker
+	sudo systemctl enable docker
+	sudo curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > docker-compose && chmod +x docker-compose && sudo mv docker-compose /usr/local/bin/
+	sudo curl -L https://raw.githubusercontent.com/docker/compose/1.2.0/contrib/completion/bash/docker-compose > docker-compose && sudo mv docker-compose /etc/bash_completion.d/
+
+	#Timezone, Language
+	echo "[vagrant provisioning] Configuring Timezone & Language..."
+	sudo timedatectl set-timezone Europe/Madrid
+	sudo apt-get install -y language-pack-ca language-pack-gnome-ca language-pack-ca-base language-pack-gnome-ca-base xinit
+	sudo update-locale LANG=ca_ES.UTF-8 LC_MESSAGES=POSIX
+
+	#Gencat customization
+	echo "[vagrant provisioning] Gencat customization..."
+	sudo mkdir /home/vagrant/Desktop
+	sudo mkdir /home/vagrant/Pictures
+	sudo cp /usr/share/lubuntu/wallpapers/1504-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1504-lubuntu-default-wallpaper_bck.png
+	sudo wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1504-lubuntu-default-wallpaper.png
+	sudo wget http://canigo.ctti.gencat.cat/img/favicon.ico -O /home/vagrant/Pictures/favicon.ico
+	sudo wget http://canigo.ctti.gencat.cat/devenv/documentacio-framework.desktop -O /home/vagrant/Desktop/documentacio-framework.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/web-canigo.desktop -O /home/vagrant/Desktop/web-canigo.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/jira.desktop -O /home/vagrant/Desktop/jira.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/svn.desktop -O /home/vagrant/Desktop/svn.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/jenkins.desktop -O /home/vagrant/Desktop/jenkins.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/eclipse.desktop -O /home/vagrant/Desktop/eclipse.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/LLEGEIX-ME.desktop -O /home/vagrant/Desktop/LLEGEIX-ME.desktop
+	sudo chown vagrant:vagrant -R /home/vagrant/Desktop
+	sudo chown vagrant:vagrant -R /home/vagrant/Pictures
+
+	#Eclipse
+	echo "[vagrant provisioning] Installing Eclipse..."
+	sudo wget http://eclipse.mirror.triple-it.nl/technology/epp/downloads/release/mars/R/eclipse-jee-mars-R-linux-gtk-x86_64.tar.gz
+	sudo tar -zxvf eclipse*.tar.gz 
+	sudo rm eclipse*.tar.gz 
+	sudo mv eclipse* /opt/
+
+	#Splash image
+	sudo wget http://canigo.ctti.gencat.cat/devenv/splash.bmp -O /opt/eclipse/plugins/org.eclipse.platform_4.5.0.v20150603-2000/splash.bmp
+
+	#Eclipse icon
+	sudo wget http://canigo.ctti.gencat.cat/devenv/icon.xpm -O /opt/eclipse/icon.xpm
+
+	#Maven (3.0.5) - no instal·lem maven, utilitzem la versió embedded 3.2.1 d'Eclipse JEE
+	#sudo apt-get -y install maven
+	
+	#Settings de Maven
+	echo "[vagrant provisioning] Configuring Maven..."
+	sudo mkdir /home/vagrant/.m2
+	sudo wget http://canigo.ctti.gencat.cat/devenv/maven_settings/settings.xml -O /home/vagrant/.m2/settings.xml
+	sudo chown vagrant:vagrant -R /home/vagrant/.m2
+
+	#Maven plugin eclipse m2e -> No l'instal·lem ja que l'incorpora l'Eclipse JEE
+	#/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/technology/m2e/releases -installIU org.eclipse.m2e.feature.feature.group
+
+	#Canigo 3.1.1 Plug-ins Feature 1.3.1
+	/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
+
+	#Patch Maven Embedder Plugin
+	sudo wget http://canigo.ctti.gencat.cat/devenv/patch_plugin_canigo/maven-embedder-3.3.3.jar -O /opt/eclipse/plugins/org.eclipse.m2e.maven.runtime_1.6.0.20150526-2031/jars/maven-embedder-3.3.3.jar
+
+	#JavaHL Library
+	sudo apt-get -y install libsvn-java
+
+	#Eclipse.ini
+	sudo wget http://canigo.ctti.gencat.cat/devenv/eclipse.ini -O /opt/eclipse/eclipse.ini
+
+	#Subversion plugin (1.10.x)
+	/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://subclipse.tigris.org/update_1.10.x/ -installIU org.tigris.subversion.subclipse.feature.group
+
+	/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://subclipse.tigris.org/update_1.10.x/ -installIU org.tigris.subversion.clientadapter.feature.feature.group
+
+ 	/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://subclipse.tigris.org/update_1.10.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
+
+ 	#Pull Docker containers
+ 	#echo "[vagrant provisioning] Pulling Docker Containers..."
+ 	#sudo docker pull wnameless/oracle-xe-11g
+	#sudo docker pull tomcat
+	
+	#Hostname
+	echo "[vagrant provisioning] Setting hostname..."
+	sudo hostname $HOSTNAME
+
+	#Clean up
+
+	# when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
+	sudo dpkg --configure -a
+	# remove obsolete packages
+	sudo apt-get autoremove -y
+
+	#Start
+	sudo startx	
+SCRIPT
+
+Vagrant.configure(2) do |config|
+  
+  config.vm.box = "ubuntu/vivid64"
+
+  config.vm.box_check_update = false
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
+    vb.memory = "1536"
+    vb.cpus = 2
+    vb.name = "CanigoDev"
+  end
+
+  config.vm.provision "shell", inline: $script
+
+end
