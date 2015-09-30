@@ -2,7 +2,7 @@ $script = <<SCRIPT
 	#!/bin/bash
 
 	# Server name
-	HOSTNAME="CanigoDev"
+	HOSTNAME="MobilityDev"
 
 	#new repos
 	echo "[vagrant provisioning] Adding repositories..."
@@ -34,8 +34,12 @@ $script = <<SCRIPT
 	sudo systemctl start docker
 	sudo systemctl enable docker
 	sudo curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > docker-compose && chmod +x docker-compose && sudo mv docker-compose /usr/local/bin/
-	sudo curl -L https://raw.githubusercontent.com/docker/compose/1.2.0/contrib/completion/bash/docker-compose > docker-compose && sudo mv docker-compose /etc/bash_completion.d/
+	sudo curl -L https://raw.githubusercontent.com/docker/compose/1.2.0/contrib/completion/bash/docker-compose > docker-compose && sudo mv docker-compose /etc/bash_completion.d
 
+	#Add vagrant user to docker group
+	sudo gpasswd -a vagrant docker
+	sudo service docker restart
+	
 	#Timezone, Language
 	echo "[vagrant provisioning] Configuring Timezone & Language..."
 	sudo timedatectl set-timezone Europe/Madrid
@@ -103,13 +107,10 @@ $script = <<SCRIPT
 
  	/opt/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://subclipse.tigris.org/update_1.10.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
 
- 	#Pull Docker containers
- 	#echo "[vagrant provisioning] Pulling Docker Containers..."
- 	#sudo docker pull wnameless/oracle-xe-11g
-	#sudo docker pull tomcat
-
 	#Remove light-locker
-	sudo apt-get remove light-locker
+	sudo apt-get -y remove light-locker
+
+	sudo apt-get -y install gedit
 	
 	#Hostname
 	echo "[vagrant provisioning] Setting hostname..."
@@ -118,9 +119,9 @@ $script = <<SCRIPT
 	#Clean up
 
 	# when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
-	sudo dpkg --configure -a
+	#sudo dpkg --configure -a
 	# remove obsolete packages
-	sudo apt-get autoremove -y
+	#sudo apt-get autoremove -y
 
 	#Start
 	sudo startx	
@@ -134,9 +135,9 @@ Vagrant.configure(2) do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
-    vb.memory = "1536"
+    vb.memory = "2048"
     vb.cpus = 2
-    vb.name = "CanigoDev"
+    vb.name = "MobilityDev"
   end
 
   config.vm.provision "shell", inline: $script
