@@ -2,7 +2,7 @@ $script = <<SCRIPT
 	#!/bin/bash
 
 	# Server name
-	HOSTNAME="CanigoDevV2"
+	HOSTNAME="CanigoDev"
 
 	#new repos
 	echo "[vagrant provisioning] Adding repositories..."
@@ -107,18 +107,12 @@ $script = <<SCRIPT
 	#Remove light-locker
 	sudo apt-get -y remove light-locker
 
+	#Install gedit
 	sudo apt-get -y install gedit
 	
 	#Hostname
 	echo "[vagrant provisioning] Setting hostname..."
 	sudo hostname $HOSTNAME
-
-	#Clean up
-
-	# when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
-	#sudo dpkg --configure -a
-	# remove obsolete packages
-	#sudo apt-get autoremove -y
 
 	#Start
 	sudo startx	
@@ -134,7 +128,7 @@ Vagrant.configure(2) do |config|
     vb.gui = true
     vb.memory = "2048"
     vb.cpus = 2
-    vb.name = "CanigoDevV2"
+    vb.name = "CanigoDev"
   end
 
   config.vm.provision "shell", inline: $script
