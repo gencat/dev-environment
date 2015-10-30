@@ -8,6 +8,7 @@ $script = <<SCRIPT
 	sudo useradd -m canigo
 	sudo echo canigo:canigo | sudo /usr/sbin/chpasswd
 	sudo usermod -s /bin/bash canigo
+	sudo adduser canigo sudo
 
 	#new repos
 	echo "[vagrant provisioning] Adding repositories..."
@@ -120,14 +121,11 @@ $script = <<SCRIPT
 	/opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://downloads.sonarsource.com/eclipse/eclipse/ -installIU org.sonar.ide.eclipse.m2e.feature.feature.group
 
 	#Install vpnc
-	sudo apt-get install vpnc
+	sudo apt-get -y install vpnc
 
 	#Remove light-locker
 	sudo apt-get -y remove light-locker
 
-	#Install gedit
-	sudo apt-get -y install gedit
-	
 	#Hostname
 	echo "[vagrant provisioning] Setting hostname..."
 	sudo hostname $HOSTNAME
@@ -146,7 +144,7 @@ Vagrant.configure(2) do |config|
     vb.gui = true
     vb.memory = "2048"
     vb.cpus = 2
-    vb.name = "CanigoDev"
+    vb.name = "CanigoDev_1.0"
   end
 
   config.vm.provision "shell", inline: $script
