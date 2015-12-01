@@ -1,4 +1,4 @@
-# dev-environment
+# Entorn de desenvolupament framework JEE Canigó corporatiu de la Generalitat de Catalunya
 
 
 ## Objectius
