@@ -27,7 +27,7 @@ $script = <<SCRIPT
 	echo "[vagrant provisioning] Adding repositories..."
 	sudo apt-get install software-properties-common -y
 	sudo add-apt-repository -y ppa:webupd8team/java
-	sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+	sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 	sudo apt-get update
 
@@ -66,7 +66,7 @@ $script = <<SCRIPT
 	#Add canigo user to docker group
 	sudo gpasswd -a canigo docker
 	sudo service docker restart
-	
+
 	#Timezone, Language
 	echo "[vagrant provisioning] Configuring Timezone & Language..."
 	sudo timedatectl set-timezone Europe/Madrid
@@ -95,8 +95,8 @@ $script = <<SCRIPT
 	#Eclipse
 	echo "[vagrant provisioning] Installing Eclipse..."
 	sudo wget http://dist.springsource.com/release/STS/${STS_VERSION}/dist/e4.5/spring-tool-suite-${STS_VERSION}-e4.5.1-linux-gtk-x86_64.tar.gz
-	sudo tar -zxvf spring-tool-suite*.tar.gz 
-	sudo rm spring-tool-suite*.tar.gz 
+	sudo tar -zxvf spring-tool-suite*.tar.gz
+	sudo rm spring-tool-suite*.tar.gz
 	sudo mv sts-bundle /opt/
 
 	#Splash image
@@ -104,7 +104,7 @@ $script = <<SCRIPT
 
 	#Eclipse icon
 	sudo wget http://canigo.ctti.gencat.cat/devenv/icon.xpm -O /opt/sts-bundle/sts-${STS_VERSION}/icon.xpm
-	
+
 	#Settings de Maven
 	echo "[vagrant provisioning] Configuring Maven..."
 	sudo mkdir /home/canigo/.m2
@@ -145,20 +145,16 @@ $script = <<SCRIPT
 
 	#Remove light-locker
 	sudo apt-get -y remove light-locker
-
-	#Hostname
-	echo "[vagrant provisioning] Setting hostname..."
-	sudo hostname ${HOSTNAME}
-
-	# clean the box
-	sudo apt-get clean
+	
 SCRIPT
 
 Vagrant.configure(2) do |config|
-  
+
   config.vm.box = "ubuntu/vivid64"
 
   config.vm.box_check_update = false
+
+  config.vm.hostname = "CanigoDev"
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
