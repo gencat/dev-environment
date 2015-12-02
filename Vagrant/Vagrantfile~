@@ -87,7 +87,7 @@ $script = <<SCRIPT
 	sudo wget http://canigo.ctti.gencat.cat/devenv/jira.desktop -O /home/canigo/Desktop/jira.desktop
 	sudo wget http://canigo.ctti.gencat.cat/devenv/svn.desktop -O /home/canigo/Desktop/svn.desktop
 	sudo wget http://canigo.ctti.gencat.cat/devenv/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/eclipse-v1.1.desktop -O /home/canigo/Desktop/eclipse.desktop
+	sudo wget http://canigo.ctti.gencat.cat/devenv/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
 	sudo wget http://canigo.ctti.gencat.cat/devenv/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
 	sudo chown canigo:canigo -R /home/canigo/Desktop
 	sudo chown canigo:canigo -R /home/canigo/Pictures

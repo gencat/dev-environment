@@ -10,11 +10,11 @@
 
 * [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](http://www.vagrantup.com/downloads.html)
-* [Vagranfile](https://github.com/cs-canigo/dev-environment/releases/tag/v1.0.0) amb la configuració de l'entorn Canigó 
+* [Vagranfile](https://github.com/cs-canigo/dev-environment/releases/tag/v1.0.1) amb la configuració de l'entorn Canigó 
 
 ## Com començar?
 
-* Descarregar i descomprimir el [zip](https://github.com/cs-canigo/dev-environment/archive/v1.0.0.zip) a la carpeta que desitgem (p.e. c:/vms o /home/user/vms)
+* Descarregar i descomprimir el [zip](https://github.com/cs-canigo/dev-environment/archive/v1.0.1.zip) a la carpeta que desitgem (p.e. c:/vms o /home/user/vms)
 
 * Anar per línia de comanda a la carpeta on estigui el Vagrantfile i executem:
 
