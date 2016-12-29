@@ -1,9 +1,8 @@
 # Entorn de desenvolupament framework JEE Canigó corporatiu de la Generalitat de Catalunya
 
-<span style="color: red">
-En revisió. S'està treballant en la versió 2.0.0 ja que l'actual 1.0.1 no es pot construïr.
-</span>
-
+```diff
+- En revisió. S'està treballant en la versió 2.0.0 ja que l'actual 1.0.1 no es pot construïr.
+```
 
 ## Objectius
 
@@ -55,9 +54,9 @@ En revisió. S'està treballant en la versió 2.0.0 ja que l'actual 1.0.1 no es 
 
 ## Versió 2.0.0 (En construcció)
 
-<span style="color: red">
-En construcció
-</span>
+```diff
+- En construcció
+```
 
 Canvis:
 
