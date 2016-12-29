@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.1
+Name=Eclipse 4.5 (STS)
+Type=Application
+Exec=/opt/sts-bundle/sts-3.7.2.RELEASE/STS
+Terminal=false
+Icon=/opt/sts-bundle/sts-3.7.2.RELEASE/icon.xpm
+Comment=Eclipse Mars 4.5 GA (STS)
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse Mars 4.5 GA (STS)

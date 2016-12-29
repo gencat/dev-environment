@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=Web Canigó 
+Comment=Web del CS Canigó
+Exec=/usr/bin/google-chrome http://canigo.ctti.gencat.cat 
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;

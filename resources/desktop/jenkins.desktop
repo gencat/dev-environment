@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Jenkins SIC
+Comment=SIC
+Exec=/usr/bin/google-chrome hudson.intranet.gencat.cat
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;
+
+

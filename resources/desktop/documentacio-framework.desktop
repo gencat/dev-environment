@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=Documentació Framework
+Comment=Documentació Framework 3.x
+Exec=/usr/bin/google-chrome http://canigo.ctti.gencat.cat/canigo-documentacio-versions-3x/
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;

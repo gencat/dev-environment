@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Entorn desenvolupament
+Comment=Entorn desenvolupament Canigó
+Exec=/usr/bin/google-chrome http://canigo.ctti.gencat.cat/canigo/entorn-desenvolupament/
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;
+Name[ca]=LLEGEIX-ME.desktop
+Comment[ca]=Entorn de desenvolupament
