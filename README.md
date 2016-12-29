@@ -1,5 +1,9 @@
 # Entorn de desenvolupament framework JEE Canigó corporatiu de la Generalitat de Catalunya
 
+<span style="color: red">
+En revisió. S'està treballant en la versió 2.0.0 ja que l'actual 1.0.1 no es pot construïr.
+</span>
+
 
 ## Objectius
 
@@ -48,3 +52,33 @@
 	- Engine Docker i Docker Compose Tool per l'execució de contenidors Docker
 	- Navegador Google Chrome
 	- Client VPNC per accés a XCAT
+
+## Versió 2.0.0 (En construcció)
+
+<span style="color: red">
+En construcció
+</span>
+
+Canvis:
+
+- Vagrant 1.9.1 x64
+- Ubuntu Xenial x64
+- Oracle Java 8
+- STS 3.8.3
+- Subclipse 4.2.2
+- Docker-compose 1.9.1
+
+Si al executar el "vagrant up" dona el següent error:
+
+```
+"VirtualBox is complaining that the kernel module is not loaded. Please
+run `VBoxManage --version` or open the VirtualBox GUI to see the error
+message which should contain instructions on how to fix this error."
+```
+
+Cal executar aquesta comanda:
+
+``
+sudo /etc/init.d/vboxdrv setup
+``
+ 
