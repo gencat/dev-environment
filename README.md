@@ -61,11 +61,13 @@
 Canvis:
 
 - Vagrant 1.9.1 x64
-- Ubuntu Xenial x64
+- Ubuntu Xenial x64 (Xubuntu)
 - Oracle Java 8
-- STS 3.8.3
+- STS 3.8.3 (Eclipse Neon)
 - Subclipse 4.2.2
+- Docker 1.12
 - Docker-compose 1.9.1
+
 
 Si al executar el "vagrant up" dona el següent error:
 

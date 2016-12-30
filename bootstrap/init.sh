@@ -141,9 +141,6 @@ chown canigo:canigo -R /home/canigo/.m2
 #Canigo 3.1.1 Plug-ins Feature 1.3.1
 #TODO: New plugin version?
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
-	#Patch Maven Embedder Plugin
-	#TODO: Upgrade to 3.3.9
-	#wget http://canigo.ctti.gencat.cat/devenv/patch_plugin_canigo/maven-embedder-3.3.3.jar -O /opt/sts-bundle/sts-3.8.3.RELEASE/plugins/org.eclipse.m2e.maven.runtime_1.7.0.20160603-1931/jars/maven-embedder-3.3.9.jar
 
 #JavaHL Library
 apt-get -y install libsvn-java
@@ -155,8 +152,8 @@ wget http://canigo.ctti.gencat.cat/devenv/STS.ini -O /opt/sts-bundle/sts-3.8.3.R
 
 #Subversion plugin
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.subclipse.feature.group
-	/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.feature.feature.group
- 	/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
+#/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.feature.feature.group
+/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
 
 #Docker Eclipse Plugin
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/linuxtools/updates-docker-nightly/ -installIU org.eclipse.linuxtools.docker.feature.feature.group
@@ -172,3 +169,5 @@ apt-get -y clean
 apt-get -y autoremove
 dd if=/dev/zero of=/EMPTY bs=1M > /dev/null 2>&1
 rm -f /EMPTY
+
+#TODO: Keyboard & IBus preferences
