@@ -55,15 +55,14 @@ sed -i -e 's/xubuntu-wallpaper.png/canigo-wallpaper.png/' /etc/xdg/xdg-xubuntu/x
 #TODO: Change image-style to streched
 #sed -i -e 's/<property name="image-style" type="int" value="5"/>/<property name="image-style" type="int" value="3"/>/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
 
-#TODO: Update launchers and move to Github
-wget http://canigo.ctti.gencat.cat/img/favicon.ico -O /home/canigo/Pictures/favicon.ico
-wget http://canigo.ctti.gencat.cat/devenv/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
-wget http://canigo.ctti.gencat.cat/devenv/web-canigo.desktop -O /home/canigo/Desktop/web-canigo.desktop
-wget http://canigo.ctti.gencat.cat/devenv/jira.desktop -O /home/canigo/Desktop/jira.desktop
-wget http://canigo.ctti.gencat.cat/devenv/svn.desktop -O /home/canigo/Desktop/svn.desktop
-wget http://canigo.ctti.gencat.cat/devenv/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
-wget http://canigo.ctti.gencat.cat/devenv/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
-wget http://canigo.ctti.gencat.cat/devenv/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/favicon.ico -O /home/canigo/Pictures/favicon.ico
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/web-canigo.desktop -O /home/canigo/Desktop/web-canigo.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/jira.desktop -O /home/canigo/Desktop/jira.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/svn.desktop -O /home/canigo/Desktop/svn.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
 
 chown canigo:canigo -R /home/canigo/Desktop
 chown canigo:canigo -R /home/canigo/Pictures
@@ -124,31 +123,27 @@ rm spring-tool-suite*.tar.gz
 mv sts-bundle /opt/
 
 #Splash image
-#TODO: Move resource to Github
-wget http://canigo.ctti.gencat.cat/devenv/splash.bmp -O /opt/sts-bundle/sts-3.8.3.RELEASE/plugins/org.eclipse.platform_4.6.2.v20161124-1400/splash.bmp
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/splash.bmp -O /opt/sts-bundle/sts-3.8.3.RELEASE/plugins/org.eclipse.platform_4.6.2.v20161124-1400/splash.bmp
 #Eclipse icon
-#TODO: Move resource to Github
-wget http://canigo.ctti.gencat.cat/devenv/icon.xpm -O /opt/sts-bundle/sts-3.8.3.RELEASE/icon.xpm
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/icon.xpm -O /opt/sts-bundle/sts-3.8.3.RELEASE/icon.xpm
 	
 #Maven - Instal·lem Maven tot i que l'Eclipse utilitza la versió embedded. Si cal executar per linia de comandes es fara servir aquesta. Cal tenir en compte que no coincidiran exactament les versions.
 apt-get -y install maven
 #Settings de Maven
 mkdir /home/canigo/.m2
-#TODO: Move resource to Github
-wget http://canigo.ctti.gencat.cat/devenv/maven_settings/settings.xml -O /home/canigo/.m2/settings.xml
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/maven/settings.xml -O /home/canigo/.m2/settings.xml
 chown canigo:canigo -R /home/canigo/.m2
 
 #Canigo 3.1.1 Plug-ins Feature 1.3.1
-#TODO: New plugin version?
+#TODO: New plugin version for Canigo 3.2
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
 
 #JavaHL Library
 apt-get -y install libsvn-java
 
 #STS.ini
-#TODO: Update .ini and move to Github
 cp /opt/sts-bundle/sts-3.8.3.RELEASE/STS.ini /opt/sts-bundle/sts-3.8.3.RELEASE/STS.ini.bck
-wget http://canigo.ctti.gencat.cat/devenv/STS.ini -O /opt/sts-bundle/sts-3.8.3.RELEASE/STS.ini
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/eclipse/STS.ini -O /opt/sts-bundle/sts-3.8.3.RELEASE/STS.ini
 
 #Subversion plugin
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.subclipse.feature.group
