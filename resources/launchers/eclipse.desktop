@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Eclipse Neon 4.6 (STS)
+Type=Application
+Exec=/opt/sts-bundle/sts-3.8.3.RELEASE/STS
+Terminal=false
+Icon=/opt/sts-bundle/sts-3.8.3.RELEASE/icon.xpm
+Comment=Eclipse Neon 4.6 GA (STS)
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse Neon 4.6 GA (STS)
+Name[es_ES]=Eclipse Neon 4.6 (STS)
+Comment[es_ES]=Eclipse Neon 4.6 GA (STS)
