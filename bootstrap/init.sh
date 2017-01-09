@@ -4,8 +4,14 @@
 apt-get update
 apt-get upgrade
 
+export LANGUAGE='ca_ES.UTF-8'
+export LANG='ca_ES.UTF-8'
+export LC_ALL='ca_ES.UTF-8'
+locale-gen ca_ES.UTF-8
+dpkg-reconfigure locales
+
 #####################################################################################
-# Set hostname, create canigo user, set timezone and locale, and install utilities
+# Set hostname, create canigo user and install utilities
 #####################################################################################
 
 hostname "CanigoDev"
@@ -16,23 +22,20 @@ echo canigo:canigo | /usr/sbin/chpasswd
 usermod -s /bin/bash canigo
 adduser canigo sudo
 
-#Set timezone and UTF-8 as default encoding
-timedatectl set-timezone Europe/Madrid
-apt-get install -y language-pack-ca
-update-locale LANG=ca_ES.UTF-8 LC_MESSAGES=POSIX
-
 # install utilities
-apt-get install -y vim git zip bzip2 fontconfig curl language-pack-en
+apt-get install -y vim git zip bzip2 fontconfig curl language-pack-ca
 
 ################################################################################
 # Install the graphical environment
 ################################################################################
 
+timedatectl set-timezone Europe/Madrid
+
 # force encoding
-echo 'LANG=en_US.UTF-8' >> /etc/environment
-echo 'LANGUAGE=en_US.UTF-8' >> /etc/environment
-echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
-echo 'LC_CTYPE=en_US.UTF-8' >> /etc/environment
+echo 'LANG=ca_ES.UTF-8' >> /etc/environment
+echo 'LANGUAGE=ca_ES.UTF-8' >> /etc/environment
+echo 'LC_ALL=ca_ES.UTF-8' >> /etc/environment
+echo 'LC_CTYPE=ca_ES.UTF-8' >> /etc/environment
 
 # run GUI as non-privileged user
 echo 'allowed_users=anybody' > /etc/X11/Xwrapper.config
@@ -47,11 +50,9 @@ apt-get remove -y light-locker --purge
 mkdir /home/canigo/Desktop
 mkdir /home/canigo/Pictures
 
-sed -i -e 's/xubuntu-wallpaper.png/jhipster-wallpaper.png/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
-
 cp /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop_bck.xml
-wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/xfce4/backdrops/canigo-wallpaper.png
-sed -i -e 's/xubuntu-wallpaper.png/canigo-wallpaper.png/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml3
+wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/fonspantalla_1280.png -O /usr/share/xfce4/backdrops/canigo-wallpaper.png
+sed -i -e 's/xubuntu-wallpaper.png/canigo-wallpaper.png/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
 #TODO: Change image-style to streched
 #sed -i -e 's/<property name="image-style" type="int" value="5"/>/<property name="image-style" type="int" value="3"/>/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
 
@@ -63,6 +64,8 @@ wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/l
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
+
+chmod +x /home/canigo/Desktop/*.desktop
 
 chown canigo:canigo -R /home/canigo/Desktop
 chown canigo:canigo -R /home/canigo/Pictures
@@ -147,11 +150,11 @@ wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/e
 
 #Subversion plugin
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.subclipse.feature.group
-#/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.feature.feature.group
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/releases/subclipse/4.2.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
 
 #Docker Eclipse Plugin
-/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/linuxtools/updates-docker-nightly/ -installIU org.eclipse.linuxtools.docker.feature.feature.group
+/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/linuxtools/update-docker -installIU org.eclipse.linuxtools.docker.feature.feature.group
+/opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/linuxtools/update-docker -installIU org.eclipse.linuxtools.docker.ui
 
 #SonarQube Eclipse Plugin (Ref: http://docs.sonarqube.org/display/SONAR/Features+details#Featuresdetails-SonarQubeJavaConfigurationHelper)
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://downloads.sonarsource.com/eclipse/eclipse/ -installIU org.sonar.ide.eclipse.feature.feature.group
@@ -166,3 +169,4 @@ dd if=/dev/zero of=/EMPTY bs=1M > /dev/null 2>&1
 rm -f /EMPTY
 
 #TODO: Keyboard & IBus preferences
+# Menu -> Settings -> Xfce4 Settings Manager -> Keyboard -> Layout tab
