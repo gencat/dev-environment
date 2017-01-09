@@ -1,9 +1,5 @@
 # Entorn de desenvolupament framework JEE Canigó corporatiu de la Generalitat de Catalunya
 
-```diff
-- En revisió. S'està treballant en la versió 2.0.0 ja que l'actual 1.0.1 no es pot construïr.
-```
-
 ## Objectius
 
 * Facilitar la posada en marxa de l'entorn de desenvolupament, aprovisionant una màquina virtual amb tot el necessari per a començar el desenvolupament d'una aplicació Canigó.
