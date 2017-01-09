@@ -9,11 +9,11 @@
 
 * [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](http://www.vagrantup.com/downloads.html)
-* [Vagranfile](https://github.com/cs-canigo/dev-environment/releases/tag/v1.0.1) amb la configuració de l'entorn Canigó 
+* [Vagranfile](https://github.com/cs-canigo/dev-environment/releases/tag/v1.0.2) amb la configuració de l'entorn Canigó 
 
 ## Com començar?
 
-* Descarregar i descomprimir el [zip](https://github.com/cs-canigo/dev-environment/archive/v1.0.1.zip) a la carpeta que desitgem (p.e. c:/vms o /home/user/vms)
+* Descarregar i descomprimir el [zip](https://github.com/cs-canigo/dev-environment/archive/v1.0.2.zip) a la carpeta que desitgem (p.e. c:/vms o /home/user/vms)
 
 * Anar per línia de comanda a la carpeta on estigui el Vagrantfile i executem:
 
@@ -28,8 +28,12 @@
 
 * Usuari i password: canigo/canigo
 
-* Configurar el teclat amb la configuració correcta: Menú inici > Preferències > Keyboard Input Methods > Input method > Add
-* Anara a IBUS Preferences -> Input Method -> Sel·leccionar l'idioma desitjat
+* Activar IBUS: Menú inici > Preferències > IBUS Preferences > Start ("Yes")
+* Configurar el teclat per català
+	
+	- Menú inici > Preferències > IBUS Preferences -> Input Method -> Add ("Catalan; Valencian")
+	- Menú inici > Preferències > IBUS Preferences -> Input Method -> Eliminar "English" i seleccionar ""Catalan; Valencian"
+
 
 ## Programari instal·lat
 
@@ -38,7 +42,6 @@
 	- M2Eclipse per integració amb [Apache Maven](https://maven.apache.org/)
 	- CTTI Canigó per creació aplicacions Canigó 3.1 basades en arquitectura REST+HTML5/JS o JSF
 	- Spring Tool Suite per facilitar el desenvolupament d'aplicacions basades en [Spring](http://spring.io/projects)
-	- Docker Tooling per manegar els contenidors [Docker](https://www.docker.com/)
 	- Subclipse per integració amb [Subversion] (https://subversion.apache.org/)
 	- SonarQube per integració amb [SonarQube] (http://spring.io/projects) (antic Sonar)
 
