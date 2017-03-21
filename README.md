@@ -34,6 +34,9 @@
 	- Menú inici > Preferències > IBUS Preferences -> Input Method -> Add ("Catalan; Valencian")
 	- Menú inici > Preferències > IBUS Preferences -> Input Method -> Eliminar "English" i seleccionar ""Catalan; Valencian"
 
+* Obrir un terminal i executar
+
+		sudo dpkg-reconfigure keyboard-configuration
 
 ## Programari instal·lat
 
