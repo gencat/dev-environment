@@ -26,10 +26,10 @@ $script = <<SCRIPT
 	
 	#Java
 	echo "[vagrant provisioning] Installing Java..."
-	# automatic install of the Oracle JDK 7
-	echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-	sudo apt-get -y install oracle-java7-set-default
-	export JAVA_HOME="/usr/lib/jvm/java-7-oracle/jre"
+	# automatic install of the Oracle JDK 8
+	echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+	sudo apt-get -y install oracle-java8-set-default
+	export JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
 	
 	#Docker and compose
 	echo "[vagrant provisioning] Installing Docker..."
