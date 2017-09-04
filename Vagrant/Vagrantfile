@@ -136,7 +136,7 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
     # See https://github.com/chef/bento/issues/682
     vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
-    vb.name = "CanigoDev-1.0.3"
+    vb.name = "CanigoDev-1.0.4"
   end
 
   config.vm.provision "shell", inline: $script
