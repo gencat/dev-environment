@@ -41,7 +41,7 @@ echo 'LC_CTYPE=ca_ES.UTF-8' >> /etc/environment
 echo 'allowed_users=anybody' > /etc/X11/Xwrapper.config
 
 # install Ubuntu desktop (XUbuntu) and VirtualBox guest tools
-apt-get install -y xubuntu-desktop virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+apt-get install -y lubuntu-desktop virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
 
 # remove light-locker
 apt-get remove -y light-locker --purge
@@ -50,11 +50,10 @@ apt-get remove -y light-locker --purge
 mkdir /home/canigo/Desktop
 mkdir /home/canigo/Pictures
 
-cp /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop_bck.xml
-wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/fonspantalla_1280.png -O /usr/share/xfce4/backdrops/canigo-wallpaper.png
-sed -i -e 's/xubuntu-wallpaper.png/canigo-wallpaper.png/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
-#TODO: Change image-style to streched
-#sed -i -e 's/<property name="image-style" type="int" value="5"/>/<property name="image-style" type="int" value="3"/>/' /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+#Wallpaper
+sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper_bck.png
+sudo wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
+sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
 
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/favicon.ico -O /home/canigo/Pictures/favicon.ico
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/launchers/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
@@ -110,7 +109,7 @@ systemctl start docker
 systemctl enable docker
 
 # install docker compose
-curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 # configure docker group (docker commands can be launched without sudo)
@@ -127,18 +126,19 @@ mv sts-bundle /opt/
 
 #Splash image
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/splash.bmp -O /opt/sts-bundle/sts-3.8.3.RELEASE/plugins/org.eclipse.platform_4.6.2.v20161124-1400/splash.bmp
+
 #Eclipse icon
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/images/icon.xpm -O /opt/sts-bundle/sts-3.8.3.RELEASE/icon.xpm
 	
 #Maven - Instal·lem Maven tot i que l'Eclipse utilitza la versió embedded. Si cal executar per linia de comandes es fara servir aquesta. Cal tenir en compte que no coincidiran exactament les versions.
 apt-get -y install maven
+
 #Settings de Maven
 mkdir /home/canigo/.m2
 wget https://raw.githubusercontent.com/asamo7/dev-environment/master/resources/maven/settings.xml -O /home/canigo/.m2/settings.xml
 chown canigo:canigo -R /home/canigo/.m2
 
-#Canigo 3.1.1 Plug-ins Feature 1.3.1
-#TODO: New plugin version for Canigo 3.2
+#Eclipse Canigó plugin
 /opt/sts-bundle/sts-3.8.3.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
 
 #JavaHL Library
