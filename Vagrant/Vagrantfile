@@ -37,8 +37,8 @@ $script = <<SCRIPT
 	#sudo apt-get install -y docker.io
 	sudo systemctl start docker
 	sudo systemctl enable docker
-	sudo curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` > docker-compose && chmod +x docker-compose && sudo mv docker-compose /usr/local/bin/
-	sudo curl -L https://raw.githubusercontent.com/docker/compose/1.2.0/contrib/completion/bash/docker-compose > docker-compose && sudo mv docker-compose /etc/bash_completion.d
+	sudo curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-`uname -s`-`uname -m` > docker-compose && chmod +x docker-compose && sudo mv docker-compose /usr/local/bin/
+	sudo curl -L https://raw.githubusercontent.com/docker/compose/1.17.1/contrib/completion/bash/docker-compose > docker-compose && sudo mv docker-compose /etc/bash_completion.d
 
 	#Add canigo user to docker group
 	sudo gpasswd -a canigo docker
@@ -54,9 +54,13 @@ $script = <<SCRIPT
 	echo "[vagrant provisioning] Gencat customization..."
 	sudo mkdir /home/canigo/Desktop
 	sudo mkdir /home/canigo/Pictures
-	sudo cp /usr/share/lubuntu/wallpapers/1510-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1510-lubuntu-default-wallpaper_bck.png
-	sudo wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1510-lubuntu-default-wallpaper.png
-	sudo cp /usr/share/lubuntu/wallpapers/1510-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
+
+	#Wallpaper
+	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper_bck.png
+	sudo wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
+	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
+	
+	#Desktop shortcuts
 	sudo wget http://canigo.ctti.gencat.cat/img/favicon.ico -O /home/canigo/Pictures/favicon.ico
 	sudo wget http://canigo.ctti.gencat.cat/devenv/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
 	sudo wget http://canigo.ctti.gencat.cat/devenv/web-canigo.desktop -O /home/canigo/Desktop/web-canigo.desktop
@@ -136,7 +140,7 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
     # See https://github.com/chef/bento/issues/682
     vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
-    vb.name = "CanigoDev-1.0.4"
+    vb.name = "CanigoDev-2.0.0"
   end
 
   config.vm.provision "shell", inline: $script
