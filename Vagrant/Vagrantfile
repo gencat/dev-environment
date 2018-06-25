@@ -6,7 +6,7 @@ $script = <<SCRIPT
 	sudo echo canigo:canigo | sudo /usr/sbin/chpasswd
 	sudo usermod -s /bin/bash canigo
 	sudo adduser canigo sudo
-	
+
 	#new repos
 	echo "[vagrant provisioning] Adding repositories..."
 	sudo apt-get install software-properties-common -y
@@ -14,23 +14,27 @@ $script = <<SCRIPT
 	sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 	sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 	sudo apt-get update
-	
+
 	#System
-	echo "[vagrant provisioning] Installing VirtualBox..."
-	sudo apt-get install -y lubuntu-desktop virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 xinit
+	#System
+        echo "[vagrant provisioning] Installing Desktop..."
+	sudo apt-get install -y lubuntu-desktop xinit
 	sudo apt-get install curl
-	
+
+	#echo "[vagrant provisioning] Installing VirtualBox Guest additions..."
+	#sudo apt-get install -y virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+
 	#Chrome
 	echo "[vagrant provisioning] Installing Chrome..."
 	sudo apt-get install -y google-chrome-stable
-	
+
 	#Java
 	echo "[vagrant provisioning] Installing Java..."
 	# automatic install of the Oracle JDK 8
 	echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
 	sudo apt-get -y install oracle-java8-set-default
 	export JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
-	
+
 	#Docker and compose
 	echo "[vagrant provisioning] Installing Docker..."
 	sudo wget -qO- https://get.docker.com/ | sh
@@ -43,7 +47,7 @@ $script = <<SCRIPT
 	#Add canigo user to docker group
 	sudo gpasswd -a canigo docker
 	sudo service docker restart
-	
+
 	#Timezone, Language
 	echo "[vagrant provisioning] Configuring Timezone & Language..."
 	sudo timedatectl set-timezone Europe/Madrid
@@ -59,7 +63,7 @@ $script = <<SCRIPT
 	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper_bck.png
 	sudo wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
 	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
-	
+
 	#Desktop shortcuts
 	sudo wget http://canigo.ctti.gencat.cat/img/favicon.ico -O /home/canigo/Pictures/favicon.ico
 	sudo wget http://canigo.ctti.gencat.cat/devenv/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
@@ -71,20 +75,20 @@ $script = <<SCRIPT
 	sudo wget http://canigo.ctti.gencat.cat/devenv/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
 	sudo chown canigo:canigo -R /home/canigo/Desktop
 	sudo chown canigo:canigo -R /home/canigo/Pictures
-	
+
 	#Eclipse
 	echo "[vagrant provisioning] Installing Eclipse..."
 	sudo wget http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86_64.tar.gz
 	sudo tar -zxvf spring-tool-suite*.tar.gz
 	sudo rm spring-tool-suite*.tar.gz
 	sudo mv sts-bundle /opt/
-	
+
 	#Splash image
 	sudo wget http://canigo.ctti.gencat.cat/devenv/splash.bmp -O /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.platform_4.5.1.v20150904-0015/splash.bmp
 
 	#Eclipse icon
 	sudo wget http://canigo.ctti.gencat.cat/devenv/icon.xpm -O /opt/sts-bundle/sts-3.7.1.RELEASE/icon.xpm
-	
+
 	#Maven - Instal·lem Maven tot i que l'Eclipse utilitza la versió embedded. Si cal executar per linia de comandes es fara servir aquesta. Cal tenir en compte que no coincidiran exactament les versions.
 	sudo apt-get -y install maven
 
@@ -93,7 +97,7 @@ $script = <<SCRIPT
 	sudo mkdir /home/canigo/.m2
 	sudo wget http://canigo.ctti.gencat.cat/devenv/maven_settings/settings.xml -O /home/canigo/.m2/settings.xml
 	sudo chown canigo:canigo -R /home/canigo/.m2
-	
+
 	#Canigo 3.1.1 Plug-ins Feature 1.3.1
 	/opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
 
@@ -126,7 +130,7 @@ $script = <<SCRIPT
 
 	#Remove light-locker
 	sudo apt-get -y remove light-locker
-	
+
 	echo "[vagrant provisioning] Provisioning completed. Please restart VM"
 SCRIPT
 
@@ -142,9 +146,9 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
     # See https://github.com/chef/bento/issues/682
     vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
-    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    #vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     vb.customize ["modifyvm", :id, "--vram", "128"]
-    vb.name = "CanigoDev-2.0.1"
+    vb.name = "CanigoDev-2.0.2"
   end
 
   config.vm.provision "shell", inline: $script
