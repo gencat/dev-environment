@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=CSTD. Suport al desenvolupament
+Comment=Peticions de servei al Centre de Suport Canigó
+Exec=/usr/bin/google-chrome cstd.ctti.gencat.cat
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;

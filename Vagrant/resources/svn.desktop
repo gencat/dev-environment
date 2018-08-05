@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=SVN Gencat
+Comment=Repositori de codi de la Generalitat
+Exec=/usr/bin/google-chrome svn.intranet.gencat.cat
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;
+
