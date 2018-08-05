@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Git Gencat
+Comment=Repositori de codi de la Generalitat
+Exec=/usr/bin/google-chrome git.intranet.gencat.cat
+Icon=/home/canigo/Pictures/favicon.ico
+Type=Application
+Categories=Internet;Application;
+
+Name[es_ES]=Git Gencat

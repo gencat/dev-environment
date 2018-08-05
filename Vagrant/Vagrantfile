@@ -61,18 +61,18 @@ $script = <<SCRIPT
 
 	#Wallpaper
 	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper_bck.png
-	sudo wget http://canigo.ctti.gencat.cat/devenv/fonspantalla_1280.png -O /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
+	sudo wget https://github.com/gencat/dev-environment/raw/master/Vagrant/resources/fonspantalla_1280.png?raw=true -O /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
 	sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
 
 	#Desktop shortcuts
-	sudo wget http://canigo.ctti.gencat.cat/img/favicon.ico -O /home/canigo/Pictures/favicon.ico
-	sudo wget http://canigo.ctti.gencat.cat/devenv/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/web-canigo.desktop -O /home/canigo/Desktop/web-canigo.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/jira.desktop -O /home/canigo/Desktop/jira.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/svn.desktop -O /home/canigo/Desktop/svn.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
-	sudo wget http://canigo.ctti.gencat.cat/devenv/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/favicon.ico -O /home/canigo/Pictures/favicon.ico
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/documentacio-framework.desktop -O /home/canigo/Desktop/documentacio-framework.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/web-canigo.desktop -O /home/canigo/Desktop/web-canigo.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/jira.desktop -O /home/canigo/Desktop/jira.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/git.desktop -O /home/canigo/Desktop/git.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/jenkins.desktop -O /home/canigo/Desktop/jenkins.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/eclipse.desktop -O /home/canigo/Desktop/eclipse.desktop
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/LLEGEIX-ME.desktop -O /home/canigo/Desktop/LLEGEIX-ME.desktop
 	sudo chown canigo:canigo -R /home/canigo/Desktop
 	sudo chown canigo:canigo -R /home/canigo/Pictures
 
@@ -84,10 +84,10 @@ $script = <<SCRIPT
 	sudo mv sts-bundle /opt/
 
 	#Splash image
-	sudo wget http://canigo.ctti.gencat.cat/devenv/splash.bmp -O /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.platform_4.5.1.v20150904-0015/splash.bmp
+	sudo wget https://github.com/gencat/dev-environment/blob/master/Vagrant/resources/splash.bmp?raw=true -O /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.platform_4.5.1.v20150904-0015/splash.bmp
 
 	#Eclipse icon
-	sudo wget http://canigo.ctti.gencat.cat/devenv/icon.xpm -O /opt/sts-bundle/sts-3.7.1.RELEASE/icon.xpm
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/icon.xpm -O /opt/sts-bundle/sts-3.7.1.RELEASE/icon.xpm
 
 	#Maven - Instal·lem Maven tot i que l'Eclipse utilitza la versió embedded. Si cal executar per linia de comandes es fara servir aquesta. Cal tenir en compte que no coincidiran exactament les versions.
 	sudo apt-get -y install maven
@@ -95,20 +95,20 @@ $script = <<SCRIPT
 	#Settings de Maven
 	echo "[vagrant provisioning] Configuring Maven..."
 	sudo mkdir /home/canigo/.m2
-	sudo wget http://canigo.ctti.gencat.cat/devenv/maven_settings/settings.xml -O /home/canigo/.m2/settings.xml
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/maven_settings/settings.xml -O /home/canigo/.m2/settings.xml
 	sudo chown canigo:canigo -R /home/canigo/.m2
 
 	#Canigo 3.1.1 Plug-ins Feature 1.3.1
 	/opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
 
 	#Patch Maven Embedder Plugin
-	sudo wget http://canigo.ctti.gencat.cat/devenv/patch_plugin_canigo/maven-embedder-3.3.3.jar -O /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.m2e.maven.runtime_1.6.2.20150902-0001/jars/maven-embedder-3.3.3.jar
+	sudo wget https://github.com/gencat/dev-environment/blob/master/Vagrant/resources/patch_plugin_canigo/maven-embedder-3.3.3.jar?raw=true -O /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.m2e.maven.runtime_1.6.2.20150902-0001/jars/maven-embedder-3.3.3.jar
 
 	#JavaHL Library
 	sudo apt-get -y install libsvn-java
 
 	#STS.ini
-	sudo wget http://canigo.ctti.gencat.cat/devenv/STS.ini -O /opt/sts-bundle/sts-3.7.1.RELEASE/STS.ini
+	sudo wget https://raw.githubusercontent.com/gencat/dev-environment/master/Vagrant/resources/STS.ini -O /opt/sts-bundle/sts-3.7.1.RELEASE/STS.ini
 
 	#Subversion plugin (1.12.x)
 	/opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/archive/release/1.12.x/ -installIU org.tigris.subversion.subclipse.feature.group
