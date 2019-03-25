@@ -1,3 +1,8 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 2.0.0"
+
 $script = <<SCRIPT
 	#!/bin/bash
 
@@ -79,7 +84,7 @@ $script = <<SCRIPT
 	#
 	#Eclipse
 	#
-	
+
 	echo "[vagrant provisioning] Installing Eclipse..."
 	sudo rm -fr /opt/sts-bundle spring-tool-suite*.tar.gz 2> /dev/null
 	sudo wget -nv http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86_64.tar.gz
@@ -145,23 +150,26 @@ SCRIPT
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "bento/ubuntu-16.04"
+	config.vm.box = "ubuntu/bionic64"
+    config.vm.box_version = "20190314.0.0"
 
-  config.vm.box_check_update = false
+	config.vm.box_check_update = false
 
-  config.vm.provider "virtualbox" do |vb|
-    vb.gui = true
-    vb.memory = "4096"
-    vb.cpus = 2
-    # See https://github.com/chef/bento/issues/682
-    vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
-    #vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
-    vb.customize ["modifyvm", :id, "--vram", "128"]
-    vb.name = "CanigoDev-2.0.4"
-  end
+	config.vm.provider "virtualbox" do |vb|
+        vb.default_nic_type = "virtio"
+		vb.gui = true
+		vb.memory = "4096"
+		vb.cpus = 2
+		# vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+		# See https://github.com/chef/bento/issues/682
+		vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
+		vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+		vb.customize ["modifyvm", :id, "--vram", "128"]
+		vb.name = "CanigoDev-3.0.0-b1"
+	end
 
 	config.vm.provision "file", source: "resources", destination: "/tmp/resources"
 
-  config.vm.provision "shell", inline: $script
+	config.vm.provision "shell", inline: $script
 
 end
