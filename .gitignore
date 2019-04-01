@@ -1,3 +1,4 @@
 .vagrant
 Vagrant/datadisk.vmdk
 Vagrant/swapdisk.vdi
+*.log
