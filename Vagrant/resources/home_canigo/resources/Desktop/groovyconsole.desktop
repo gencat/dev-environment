@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Groovy Console
+Type=Application
+Exec=/opt/groovy-2.5.6/bin/groovyConsole
+Icon=/opt/groovy-2.5.6/bin/groovy.ico
+NoDisplay=false
+Categories=Development;
