@@ -1,8 +1,7 @@
 [Desktop Entry]
-Name=Eclipse 4.5 (STS)
+Name=Spring Tool Suite 4 (Eclipse)
 Type=Application
-Exec=/opt/sts-bundle/sts-3.7.1.RELEASE/STS
-Icon=/opt/sts-bundle/sts-3.7.1.RELEASE/icon.xpm
-Comment=Eclipse Mars 4.5 GA (STS)
+Exec=/opt/sts-4.1.2.RELEASE/SpringToolSuite4
+Icon=/opt/sts-4.1.2.RELEASE/icon.xpm
 NoDisplay=false
 Categories=Development;IDE;

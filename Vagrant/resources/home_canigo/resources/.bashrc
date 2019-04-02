@@ -122,5 +122,3 @@ if ! shopt -oq posix; then
 fi
 
 setxkbmap -layout 'es,es' -model pc105
-
-java8

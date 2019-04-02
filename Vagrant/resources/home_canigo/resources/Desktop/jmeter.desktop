@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=JMeter 5
+Type=Application
+Exec=/opt/apache-jmeter-5.1.1/bin/jmeter.sh
+Icon=/opt/apache-jmeter-5.1.1/docs/images/favicon.png
+NoDisplay=false
+Categories=Development;

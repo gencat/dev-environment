@@ -8,6 +8,12 @@ log "Configurant usuari canigo ..."
 # mkdir -p /home/canigo && cd /home/canigo || die 2
 
 cd /home || die 2
+
+# clean-up selectiu
+# cd /home/canigo
+# rm -fr [D-V]* .[c-l]* .mozilla/ .pki/ .[s-x]* .Xauthority .xsession-errors*
+# cd ..
+
 tar -xvJf /vagrant/resources/home_canigo/init.tar.xz --overwrite || die 3
 
 _RESOURCES=/tmp/resources/home_canigo/resources

@@ -35,10 +35,10 @@ export GIT_SSH=/usr/bin/ssh
 export GIT_EDITOR="vim"
 
 export JAVA_HOME8=/usr/lib/jvm/java-8-openjdk-amd64
-export JAVA_HOME11=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME11=/opt/jdk-11.0.2
 
 # export JAVA_OPTS="-verbose:gc"
-export JAVA_OPTS="-Xms256m -Xmx1024m"
+export JAVA_OPTS="$JAVA_OPTS -Xms256m -Xmx1024m"
 
 export NODE_V8=/opt/node-v8.15.1-linux-x64
 export NODE_V10=/opt/node-v10.15.3-linux-x64

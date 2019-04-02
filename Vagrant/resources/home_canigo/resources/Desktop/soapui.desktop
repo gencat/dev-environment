@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=SoapUI 5.5
+Type=Application
+Exec=/opt/SoapUI-5.5.0/bin/soapui.sh
+#Icon=/opt/SoapUI-5.5.0/bin/icon.xpm
+NoDisplay=false
+Categories=Development;IDE;

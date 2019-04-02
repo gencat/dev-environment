@@ -142,11 +142,7 @@ fase2 () {
     log 'Preparant instal·lació ...'
 
     PACKAGE_INSTALL_LIST="visualvm"
-    for v in 8 11 ; do
-        PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST openjdk-$v-jdk openjdk-$v-source"
-    done
-
-    PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST "
+    PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST openjdk-8-jdk openjdk-8-source"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST libsvn-java"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST mysql-client-5.7 postgresql-client-10 mongodb-clients redis-tools"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST lubuntu-desktop xinit"
@@ -205,6 +201,7 @@ fase3 () {
     docker-compose --version || die 7
     curl -L https://raw.githubusercontent.com/docker/compose/1.23.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
+    do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
     do_install https://dbeaver.io/files/6.0.1/dbeaver-ce-6.0.1-linux.gtk.x86_64.tar.gz
     do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
     do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz
@@ -215,12 +212,14 @@ fase3 () {
     do_install https://nodejs.org/dist/v8.15.1/node-v8.15.1-linux-x64.tar.gz
     do_install https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.gz
 
-    log 'Instal.lant Postman ...'
+    # Postman no instal·lat per no tenir llicència aplicable
 
-    cd /opt
-    wget -nv https://dl.pstmn.io/download/latest/linux64
-    tar -xzf linux64
-    rm linux64
+    # log 'Instal.lant Postman ...'
+
+    # cd /opt
+    # wget -nv https://dl.pstmn.io/download/latest/linux64
+    # tar -xzf linux64
+    # rm linux64
 
     log 'Instal·lant VS Studio ...'
 
@@ -235,9 +234,7 @@ fase3 () {
         mv $f vs-code.deb && apt install ./vs-code.deb
     done
 
-    # Instal·lat VS Studio
-
-    # soft addicional 2
+    log 'Instal·lant software aprovisionat per script propi ...'
 
     for f in maven eclipse jedit ; do
         cd `dirname $0`
@@ -253,6 +250,10 @@ fase4 () {
 
     cd `dirname $0`
     sh resources/home_canigo/provision.sh
+
+    log 'Actualizant permisos ...'
+
+    chown -R canigo:canigo /opt
 }
 
 #
