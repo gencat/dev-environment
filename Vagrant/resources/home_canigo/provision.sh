@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../provision-common.sh || exit 127
+. /vagrant/resources/provision-common.sh || exit 127
 
 log "Configurant usuari canigo ..."
 
@@ -11,13 +11,17 @@ cd /home || die 2
 
 # clean-up selectiu
 # cd /home/canigo
-# rm -fr [D-V]* .[c-l]* .mozilla/ .pki/ .[s-x]* .Xauthority .xsession-errors*
+# rm -fr [D-X]* .[c-l]* .mozilla/ .pki/ .[s-x]* .[X]*
+# mkdir t1; cp -r [D-V]* .[c-l]* .mozilla/ .pki/ .[s-x]* .Xauthority .xsession-errors* t1
 # cd ..
 
-tar -xvJf /vagrant/resources/home_canigo/init.tar.xz --overwrite || die 3
+_RESOURCES=/tmp/resources/home_canigo
 
-_RESOURCES=/tmp/resources/home_canigo/resources
+tar -xvJf $_RESOURCES/init.tar.xz --overwrite -C /home || die 3
 
-cp -vfr $_RESOURCES/* /home/canigo
+cp -vfr $_RESOURCES/resources/* /home/canigo || die 4
+cp -vfr $_RESOURCES/resources/.[a-z]* /home/canigo || die 5
+
+tar -xvJf $_RESOURCES/.jedit.tar.xz --overwrite -C /home/canigo || die 6
 
 chown -R canigo:canigo /home/canigo

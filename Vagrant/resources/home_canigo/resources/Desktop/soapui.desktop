@@ -2,6 +2,6 @@
 Name=SoapUI 5.5
 Type=Application
 Exec=/opt/SoapUI-5.5.0/bin/soapui.sh
-#Icon=/opt/SoapUI-5.5.0/bin/icon.xpm
+Icon=/home/canigo/Pictures/SoapUI-Logo-Green.png
 NoDisplay=false
 Categories=Development;IDE;

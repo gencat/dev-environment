@@ -3,9 +3,11 @@
 # DISABLE_VBOX_GUEST_ADD=1
 # DISABLE_INSTALL_SOFTWARE=1
 REBOOT_SLEEP=10
-LOG_FILE=/tmp/vagrant/provision.sh.log
+LOG_FILE=/vagrant/resources/provision.sh.log
 
-. ./resources/provision-common.sh || exit 127
+pwd
+
+. /vagrant/resources/provision-common.sh || exit 127
 
 #
 # Fase 1 de l'aprovisionament
@@ -147,10 +149,11 @@ fase2 () {
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST mysql-client-5.7 postgresql-client-10 mongodb-clients redis-tools"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST lubuntu-desktop xinit"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST language-pack-ca language-pack-gnome-ca language-pack-ca-base language-pack-gnome-ca-base"
+    PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST aspell-ca hunspell-ca firefox-locale-ca gnome-user-docs-ca wcatalan"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST vpnc subversion"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST curl lynx links w3m"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST vim vim-syntax-docker"
-    PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST gimp"
+    # PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST gimp gimp-help-ca"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST geany"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST google-chrome-stable"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST docker.io"
@@ -158,7 +161,11 @@ fase2 () {
 
     log "Software base: $PACKAGE_INSTALL_LIST"
 
-    _apt_get install $PACKAGE_INSTALL_LIST && apt -y upgrade || die 5
+    # _apt_get install $PACKAGE_INSTALL_LIST && apt -y upgrade || die 5
+    _apt_get install $PACKAGE_INSTALL_LIST || die 5
+
+    # S'ha instal·lat com a dependència. S'elimina
+    _apt_get remove openjdk-11-jre openjdk-11-jre-headless
 
     log 'Configurant "Timezone & Language"...'
 
@@ -169,16 +176,6 @@ fase2 () {
 
     # Per defecte Firefox (en comptes de Chrome)
     update-alternatives --set x-www-browser /usr/bin/firefox
-
-cat>/etc/lightdm/lightdm.conf.d/10-autologin.conf<<EOF
-[Seat:*]
-autologin-guest = false
-autologin-user = canigo
-autologin-user-timeout = 0
-
-[SeatDefaults]
-allow-guest = false
-EOF
 
 }
 
@@ -202,6 +199,7 @@ fase3 () {
     curl -L https://raw.githubusercontent.com/docker/compose/1.23.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
     do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
+    do_install https://languagetool.org/download/LanguageTool-4.5.zip
     do_install https://dbeaver.io/files/6.0.1/dbeaver-ce-6.0.1-linux.gtk.x86_64.tar.gz
     do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
     do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz
@@ -238,7 +236,7 @@ fase3 () {
 
     for f in maven eclipse jedit ; do
         cd `dirname $0`
-        sh resources/$f/provision.sh
+        sh resources/$f/provision.sh || die 8
     done
 
 }
@@ -248,12 +246,44 @@ fase3 () {
 #
 fase4 () {
 
+cat>/etc/default/keyboard<<EOF
+XKBMODEL="pc105"
+XKBLAYOUT="es"
+XKBVARIANT="cat"
+XKBOPTIONS=""
+BACKSPACE="guess"
+EOF
+
     cd `dirname $0`
-    sh resources/home_canigo/provision.sh
+    sh resources/home_canigo/provision.sh || die 9
 
     log 'Actualizant permisos ...'
 
     chown -R canigo:canigo /opt
+
+    # autologin canigo
+cat>/etc/lightdm/lightdm.conf.d/10-autologin.conf<<EOF
+[Seat:*]
+autologin-guest = false
+autologin-user = canigo
+autologin-user-timeout = 0
+
+[SeatDefaults]
+allow-guest = false
+EOF
+
+    log 'Deshabilitant actualitzacions automàtiques ...'
+
+# https://linuxconfig.org/disable-automatic-updates-on-ubuntu-18-04-bionic-beaver-linux
+cat>/etc/apt/apt.conf.d/20auto-upgrades<<EOF
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "1";
+EOF
+
+    # Disable (graphical) automatic updates
+    mv /usr/bin/update-manager /usr/bin/update-manager.bak
+    ln -s /bin/true /usr/bin/update-manager
+
 }
 
 #
@@ -262,29 +292,29 @@ fase4 () {
 main () {
 
     # file version
-	log "main :: $0 $(/bin/ls --full-time $0 | egrep -o ' [0-9]{4}[-0-9 :]+')  ($(md5sum $0|cut -f1 -d' '))"
+	log "main :: $0 $(/bin/ls --full-time $0 | egrep -o ' [0-9]{4}[-0-9 :]+')  ($(md5sum $0|cut -f1 -d' '))" | tee -a $LOG_FILE
 
     echo "" > /dev/tty1
 
-    log "FASE 1/4 :: Configuració inicial del sistema"
+    log "FASE 1/4 :: Configuració inicial del sistema" | tee -a $LOG_FILE
 
     fase1 |& tee /dev/tty1 >> $LOG_FILE || die 1
 
-    log "FASE 2/4 :: Instal·lació i configuració de software base"
+    log "FASE 2/4 :: Instal·lació i configuració de software base" | tee -a $LOG_FILE
 
     fase2 |& tee /dev/tty1 >> $LOG_FILE || die 2
 
-    log "FASE 3/4 :: Instal·lació i configuració de software addicional"
+    log "FASE 3/4 :: Instal·lació i configuració de software addicional" | tee -a $LOG_FILE
 
     fase3 |& tee /dev/tty1 >> $LOG_FILE || die 3
 
-    log "FASE 4/4 :: Configuració final del sistema"
+    log "FASE 4/4 :: Configuració final del sistema" | tee -a $LOG_FILE
 
     fase4 |& tee /dev/tty1 >> $LOG_FILE || die 4
 
     sync
 
-    log "Entorn de desenvolupament configurat. Reiniciant en 5 segons..."
+    log "Entorn de desenvolupament configurat. Reiniciant en 5 segons..." | tee -a $LOG_FILE
 
     sleep 5
 
@@ -304,24 +334,6 @@ _exit 0
 
     $1
 
-
-
-    #Wallpaper
-    sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper_bck.png
-    sudo yes | cp -rf /tmp/resources/fonspantalla_1280.png /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png
-    sudo cp /usr/share/lubuntu/wallpapers/1604-lubuntu-default-wallpaper.png /usr/share/lubuntu/wallpapers/lubuntu-default-wallpaper.png
-
-    #Desktop shortcuts
-    sudo yes | cp -rf /tmp/resources/favicon.ico /home/canigo/Pictures/favicon.ico
-    sudo yes | cp -rf /tmp/resources/documentacio-framework.desktop /home/canigo/Desktop/documentacio-framework.desktop
-    sudo yes | cp -rf /tmp/resources/web-canigo.desktop /home/canigo/Desktop/web-canigo.desktop
-    sudo yes | cp -rf /tmp/resources/jira.desktop /home/canigo/Desktop/jira.desktop
-    sudo yes | cp -rf /tmp/resources/git.desktop /home/canigo/Desktop/git.desktop
-    sudo yes | cp -rf /tmp/resources/jenkins.desktop /home/canigo/Desktop/jenkins.desktop
-    sudo yes | cp -rf /tmp/resources/eclipse.desktop /home/canigo/Desktop/eclipse.desktop
-    sudo yes | cp -rf /tmp/resources/LLEGEIX-ME.desktop /home/canigo/Desktop/LLEGEIX-ME.desktop
-    sudo chown canigo:canigo -R /home/canigo/Desktop
-    sudo chown canigo:canigo -R /home/canigo/Pictures
 
     #
     #Eclipse

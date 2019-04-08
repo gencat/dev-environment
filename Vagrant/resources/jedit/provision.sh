@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../provision-common.sh || exit 127
+. /vagrant/resources/provision-common.sh || exit 127
 
 log "Instal.lant $0 ..."
 
@@ -25,7 +25,8 @@ log "Instal.lant plugins jedit ..."
 su - canigo -c "jedit -nogui -noserver" 2>/dev/null
 
 for plugin in SideKick-1.8-bin.zip Highlight-2.2-bin.zip Console-5.1.4-bin.zip CommonControls-1.7.4-bin.zip ErrorList-2.3-bin.zip Code2HTML-0.7-bin.zip Navigator-2.7-bin.zip ; do
-    curl -s -S -L  http://prdownloads.sourceforge.net/jedit-plugins/$plugin -o $plugin
+    # curl -s -S -L  http://prdownloads.sourceforge.net/jedit-plugins/$plugin -o $plugin
+    wget -nv  http://prdownloads.sourceforge.net/jedit-plugins/$plugin
     unzip $plugin -d /home/canigo/.jedit/jars
 done
 

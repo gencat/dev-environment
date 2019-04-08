@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=LanguageTool 4.5
+Type=Application
+Exec=java -jar /opt/LanguageTool-4.5/languagetool.jar
+Icon=/home/canigo/Pictures/LanguageTool-Icon-12.png
+NoDisplay=false
+Categories=Editor;

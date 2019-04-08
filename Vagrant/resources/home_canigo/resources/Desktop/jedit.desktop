@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=jEdit 5.5
+Type=Application
+Exec=/usr/local/bin/jedit
+Icon=/opt/jedit-5.5.0/doc/jedit.png
+NoDisplay=false
+Categories=Development;Editor;

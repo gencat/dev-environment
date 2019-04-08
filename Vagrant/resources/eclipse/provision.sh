@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../provision-common.sh || exit 127
+. /vagrant/resources/provision-common.sh || exit 127
 
 do_install https://download.springsource.com/release/STS4/4.1.2.RELEASE/dist/e4.10/spring-tool-suite-4-4.1.2.RELEASE-e4.10.0-linux.gtk.x86_64.tar.gz
 
@@ -17,14 +17,41 @@ multi_cp () {
     /bin/ls -d $* | xargs -L1 cp -vfr $SRC
 }
 
+#
+# @param 1 URL
+# @see https://stackoverflow.com/a/52887282/97799
+#
+marketplace_install_cli () {
+
+    URL=$1
+    MID=$(echo $URL | egrep -o '=[0-9]+$' | cut -f2 -d=)
+
+    rm p 2>/dev/null
+    wget -nv https://marketplace.eclipse.org/node/$MID/api/p
+
+    UPDATE_URL=$(egrep -i '<updateurl.*</updateurl>' p | egrep -o '>[^<]+' | cut -c2-)
+    PARAMS="-repository $UPDATE_URL"
+
+    IUS=$(egrep '<iu.*</iu>' p | egrep -o '>[^<]+' | cut -c2-)
+    for iu in $IUS ; do
+        PARAMS="$PARAMS -installIU $iu"
+    done
+
+    log "marketplace_install_cli $URL :: [$PARAMS]"
+
+    ./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director $PARAMS
+}
+
 _RESOURCES=/tmp/resources/eclipse
 
 multi_cp $_RESOURCES/splash.bmp ./plugins/org.eclipse.platform_*/splash.bmp ./plugins/org.springframework.boot.ide.branding_*/splash.bmp
 
 cp -vfr $_RESOURCES/icon.xpm .
 
-./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
+./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director -repository 'http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/' -installIU cat.gencat.ctti.canigo.feature.feature.group
 
-# cp find . -type f | grep '^./plugins/org.eclipse.platform_.*/splash.bmp'
+# Sonarlint
+marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=2568658'
 
-# find . -type f -name splash.bmp | grep /org.eclipse.platform |
+tar -xvJf $_RESOURCES/eclipse-conf-patch.tar.xz -C /opt
+tar -xvJf $_RESOURCES/workspaces.tar.xz -C /opt
