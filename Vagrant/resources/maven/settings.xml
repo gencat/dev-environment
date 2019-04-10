@@ -80,7 +80,8 @@ under the License.
      | Specifies a further group identifier to use for plugin lookup.
     <pluginGroup>com.your.plugins</pluginGroup>
     -->
-		<pluginGroup>org.eclipse.hudson.tools</pluginGroup>
+		<pluginGroup>org.eclipse.jetty</pluginGroup>
+		<pluginGroup>cat.gencat.ctti</pluginGroup>
   </pluginGroups>
 
   <!-- proxies
@@ -158,7 +159,7 @@ under the License.
     </mirror>
      -->
     <mirror>
-        <id>intranet.gencat.cat-public-mirror</id>
+        <id>Nexus-gencat</id>
         <name>Nexus de la Generalitat (per intranet/VPN)</name>
         <url>http://hudson.intranet.gencat.cat/nexus/repository/public</url>
         <mirrorOf>*</mirrorOf>

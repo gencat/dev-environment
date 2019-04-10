@@ -49,7 +49,7 @@ EOF
         #yes | mkfs.ext4 -T small -m0 /dev/sdd1
         yes | mkfs.ext4 -m0 /dev/sdd1
 
-        egrep '/opt|/dev/sdd1' /etc/fstab || echo '/dev/sdd1   /opt    ext4  rw,defaults,noatime,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500   0 0' >> /etc/fstab
+        egrep '/opt|/dev/sdd1' /etc/fstab || echo '/dev/sdd1   /opt    ext4  rw,defaults,noatime,noacl,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500   0 0' >> /etc/fstab
 
         log 'Optimitzant FS ...'
 
@@ -60,10 +60,10 @@ EOF
         tune2fs -o journal_data_writeback /dev/sdd1
 
         # /etc/fstab
-        sed -ie 's/ext4\tdefaults/ext4\trw,defaults,noatime,nouser_xattr,commit=3600,delalloc/' /etc/fstab
+        sed -ie 's/ext4\tdefaults/ext4\trw,defaults,noatime,noacl,nouser_xattr,commit=3600,delalloc/' /etc/fstab
 
         # optimització de SDA1 durant la instal·lació
-        mount -o remount,rw,defaults,noatime,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500 /dev/sda1 /
+        mount -o remount,rw,defaults,noatime,noacl,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500 /dev/sda1 /
 
         mount /opt
 
@@ -174,8 +174,13 @@ fase2 () {
 
     log 'Configurant aplicacions de sistema...'
 
+    log 'Configurant Firefox...'
+
     # Per defecte Firefox (en comptes de Chrome)
     update-alternatives --set x-www-browser /usr/bin/firefox
+
+    # Català per defecte per Firefox
+    echo 'pref("intl.locale.requested", "ca,en-US-u-va-posix");' >> /etc/firefox/syspref.js
 
 }
 
@@ -200,7 +205,7 @@ fase3 () {
 
     do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
     do_install https://languagetool.org/download/LanguageTool-4.5.zip
-    do_install https://dbeaver.io/files/6.0.1/dbeaver-ce-6.0.1-linux.gtk.x86_64.tar.gz
+    do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz
     do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
     do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz
     do_install https://www-eu.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip
@@ -221,16 +226,19 @@ fase3 () {
 
     log 'Instal·lant VS Studio ...'
 
-    # page scrapping "d'anar per casa"
+    # # page scrapping "d'anar per casa"
+    #
+    # cd $(mktemp -d) ; pwd
+    # lynx -dump https://code.visualstudio.com/docs/setup/linux | fgrep '/go.microsoft.com/fwlink/?LinkID=' | cut -f3- -d' ' | for f in `cat`; do
+    #     wget -nv $f
+    # done
+    #
+    # for f in `file * | fgrep 'Debian binary package' | cut -f1 -d:` ; do
+    #     mv $f vs-code.deb && apt install ./vs-code.deb
+    # done
 
-    cd $(mktemp -d) ; pwd
-    lynx -dump https://code.visualstudio.com/docs/setup/linux | fgrep '/go.microsoft.com/fwlink/?LinkID=' | cut -f3- -d' ' | for f in `cat`; do
-        wget -nv $f
-    done
-
-    for f in `file * | fgrep 'Debian binary package' | cut -f1 -d:` ; do
-        mv $f vs-code.deb && apt install ./vs-code.deb
-    done
+    # BETA 4 : Instal·lació per snap
+    snap install code --classic
 
     log 'Instal·lant software aprovisionat per script propi ...'
 
@@ -245,6 +253,9 @@ fase3 () {
 # Fase 4 de l'aprovisionament
 #
 fase4 () {
+
+    # https://www.cyberciti.biz/faq/how-to-disable-ssh-motd-welcome-message-on-ubuntu-linux/
+    /bin/ls -1 /etc/update-motd.d/* | grep -v 00-header | xargs chmod -x
 
 cat>/etc/default/keyboard<<EOF
 XKBMODEL="pc105"
@@ -281,8 +292,23 @@ APT::Periodic::Unattended-Upgrade "1";
 EOF
 
     # Disable (graphical) automatic updates
-    mv /usr/bin/update-manager /usr/bin/update-manager.bak
-    ln -s /bin/true /usr/bin/update-manager
+    for f in /usr/bin/update-manager /usr/bin/update-notifier ; do
+        mv $f $f.bak
+        ln -s /bin/true $f
+    done
+
+    log 'Auto-neteja...'
+
+    chmod +x /etc/cron.weekly/canigo.cleanup
+cat>/etc/cron.weekly/canigo.cleanup<<EOF
+#!/bin/sh
+#
+# Auto-neteja setmanal
+
+# Neteja de Snaps
+snap list --all | grep desactivado | awk '{print \$1 "," \$3}' | for f in \`cat\` ; do __APP=\$(echo \$f | cut -f1 -d,); __REV=\$(echo \$f | cut -f2 -d,) ; echo \$__APP \$__REV ; snap remove \$__APP --revision \$__REV ; done
+
+EOF
 
 }
 
@@ -318,88 +344,9 @@ main () {
 
     sleep 5
 
-    #reboot
+    # exit 0
 
-    exit 0
-#
-#
-#
-    crontab -r
-    touch /provision.sh.log
-
-    [ -z "$1" -o "$1" = "fase1" ] && fase1 | tee -a /provision.sh.log
-    [ "$1" = "fase2" ] && fase2
-
-_exit 0
-
-    $1
-
-
-    #
-    #Eclipse
-    #
-
-    echo "Installing Eclipse..."
-    sudo rm -fr /opt/sts-bundle spring-tool-suite*.tar.gz 2> /dev/null
-    sudo _wget http://dist.springsource.com/release/STS/3.7.1.RELEASE/dist/e4.5/spring-tool-suite-3.7.1.RELEASE-e4.5.1-linux-gtk-x86_64.tar.gz
-    sudo tar -zxvf spring-tool-suite*.tar.gz
-    sudo rm spring-tool-suite*.tar.gz
-    sudo mv sts-bundle /opt/
-
-    #Splash image
-    sudo yes | cp -rf /tmp/resources/splash.bmp /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.platform_4.5.1.v20150904-0015/splash.bmp
-
-    #Eclipse icon
-    sudo yes | cp -rf /tmp/resources/icon.xpm /opt/sts-bundle/sts-3.7.1.RELEASE/icon.xpm
-
-    #Maven - Instal·lem Maven tot i que l'Eclipse utilitza la versió embedded. Si cal executar per linia de comandes es fara servir aquesta. Cal tenir en compte que no coincidiran exactament les versions.
-    sudo _apt_get -y install maven
-
-    #Settings de Maven
-    echo "Configuring Maven..."
-    sudo mkdir /home/canigo/.m2
-    sudo yes | cp -rf /tmp/resources/maven_settings/settings.xml /home/canigo/.m2/settings.xml
-    sudo chown canigo:canigo -R /home/canigo/.m2
-
-    #Canigo 3.1.1 Plug-ins Feature 1.3.1
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/ -installIU cat.gencat.ctti.canigo.feature.feature.group
-
-    #Patch Maven Embedder Plugin
-    sudo yes | cp -rf /tmp/resources/patch_plugin_canigo/maven-embedder-3.3.3.jar /opt/sts-bundle/sts-3.7.1.RELEASE/plugins/org.eclipse.m2e.maven.runtime_1.6.2.20150902-0001/jars/maven-embedder-3.3.3.jar
-
-    #JavaHL Library
-    sudo _apt_get -y install libsvn-java
-
-    #STS.ini
-    sudo yes | cp -rf /tmp/resources/STS.ini /opt/sts-bundle/sts-3.7.1.RELEASE/STS.ini
-
-    #Subversion plugin (1.12.x)
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/archive/release/1.12.x/ -installIU org.tigris.subversion.subclipse.feature.group
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/archive/release/1.12.x/ -installIU org.tigris.subversion.clientadapter.feature.feature.group
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository https://dl.bintray.com/subclipse/archive/release/1.12.x/ -installIU org.tigris.subversion.clientadapter.javahl.feature.feature.group
-
-    #TODO: Docker Eclipse Plugin (Desactivat. Cal actualitzar la versio d'Eclipse, no es resol la dependencia amb org.eclipse.e4.ui.workbench v1.4.0, Eclipse Mars incorpora la 1.3.0. Es tornara a activar a la v2.0.0 de l'entorn de DEV)
-    #/opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/linuxtools/updates-docker-nightly/ -installIU org.eclipse.linuxtools.docker.feature.feature.group
-
-    #SonarQube Eclipse Plugin (Ref: http://docs.sonarqube.org/display/SONAR/Features+details#Featuresdetails-SonarQubeJavaConfigurationHelper)
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://downloads.sonarsource.com/eclipse/eclipse/ -installIU org.sonar.ide.eclipse.feature.feature.group
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://downloads.sonarsource.com/eclipse/eclipse/ -installIU org.sonar.ide.eclipse.jdt.feature.feature.group
-    /opt/sts-bundle/sts-3.7.1.RELEASE/STS -nosplash -application org.eclipse.equinox.p2.director -repository http://downloads.sonarsource.com/eclipse/eclipse/ -installIU org.sonar.ide.eclipse.m2e.feature.feature.group
-
-    # p2.tar.gz inhabilita tots els "Update sites" excepte el del plugin de Canigó
-    sudo rm -fr /opt/sts-bundle/sts-3.7.1.RELEASE/p2
-    sudo tar -xzf /tmp/resources/eclipse/p2.tar.gz
-    sudo mv p2 /opt/sts-bundle/sts-3.7.1.RELEASE/
-
-    sudo chown canigo:canigo -R /opt/*
-
-    #Install vpnc
-    sudo _apt_get -y install vpnc
-
-    #Remove light-locker
-    sudo _apt_get -y remove light-locker
-
-    echo "Provisioning completed. Please restart VM"
+    reboot
 }
 
 if [ $USER = "root" ] ; then
