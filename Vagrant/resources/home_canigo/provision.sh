@@ -24,4 +24,7 @@ cp -vfr $_RESOURCES/resources/.[a-z]* /home/canigo || die 5
 
 tar -xvJf $_RESOURCES/.jedit.tar.xz --overwrite -C /home/canigo || die 6
 
+# FIX INTCAN-1792 Problemes integració plugin de Canigó
+ln -s /opt/apache-maven-*/conf/settings.xml /home/canigo/.m2/settings.xml || die 7
+
 chown -R canigo:canigo /home/canigo
