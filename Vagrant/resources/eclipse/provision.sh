@@ -58,7 +58,7 @@ cp -vfr $_RESOURCES/icon.xpm .
 marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=2568658'
 
 # Per crear patch entre vanilla STS i pre-configurat
-# diff -qr sts-4.1.2.RELEASE/ sts-4.1.2.RELEASE.new/ | grep -v 'Only in sts-4.1.2.RELEASE.new/' | sed -e 's: and.*::' -e 's:^.* sts-:sts-:' -e 's@: @/@' > sts-diff.lst
+# diff -qr sts-4.2.0.RELEASE/ sts-4.2.0.RELEASE.new/ | grep -v 'Only in sts-4.2.0.RELEASE.new/' | sed -e 's: and.*::' -e 's:^.* sts-:sts-:' -e 's@: @/@' > sts-diff.lst
 # tar -cvJf eclipse-conf-patch.tar.xz -T sts-diff.lst
 
 tar -xvJf $_RESOURCES/eclipse-conf-patch.tar.xz -C /opt
