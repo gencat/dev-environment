@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Link
+Name=Visual Studio Code
+Icon=/snap/code/6/usr/share/pixmaps/com.visualstudio.code.png
+URL=/var/lib/snapd/desktop/applications/code_code.desktop

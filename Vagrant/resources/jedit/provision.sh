@@ -30,8 +30,4 @@ for plugin in SideKick-1.8-bin.zip Highlight-2.2-bin.zip Console-5.1.4-bin.zip C
     unzip $plugin -d /home/canigo/.jedit/jars
 done
 
-log "Configurant jedit ..."
-
-# TODO
-
 log "Instal.lat $0"

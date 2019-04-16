@@ -15,7 +15,7 @@ cd /home || die 2
 # mkdir t1; cp -r [D-V]* .[c-l]* .mozilla/ .pki/ .[s-x]* .Xauthority .xsession-errors* t1
 # cd ..
 
-_RESOURCES=/tmp/resources/home_canigo
+_RESOURCES=/vagrant/resources/home_canigo
 
 tar -xvJf $_RESOURCES/init.tar.xz --overwrite -C /home || die 3
 

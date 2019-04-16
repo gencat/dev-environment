@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Spring Tool Suite 4 (Eclipse)
 Type=Application
-Exec=/opt/sts-4.1.2.RELEASE/SpringToolSuite4
-Icon=/opt/sts-4.1.2.RELEASE/icon.xpm
+Exec=/opt/sts-4.2.0.RELEASE/SpringToolSuite4
+Icon=/opt/sts-4.2.0.RELEASE/icon.xpm
 NoDisplay=false
 Categories=Development;IDE;

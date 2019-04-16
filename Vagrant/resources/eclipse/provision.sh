@@ -4,11 +4,12 @@
 
 cd /opt
 
-do_install https://download.springsource.com/release/STS4/4.1.2.RELEASE/dist/e4.10/spring-tool-suite-4-4.1.2.RELEASE-e4.10.0-linux.gtk.x86_64.tar.gz
+# do_install https://download.springsource.com/release/STS4/4.1.2.RELEASE/dist/e4.10/spring-tool-suite-4-4.1.2.RELEASE-e4.10.0-linux.gtk.x86_64.tar.gz
+do_install https://download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz
 
 log "Configurant Eclipse ..."
 
-cd sts-* || die 1
+cd sts-4.2* || die 1
 
 #
 # cp to multiple targets
