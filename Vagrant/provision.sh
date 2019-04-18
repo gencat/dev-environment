@@ -271,6 +271,7 @@ EOF
     log 'Actualizant permisos ...'
 
     chown -R canigo:canigo /opt
+    chmod o-rwx /opt
 
     # autologin canigo
 cat>/etc/lightdm/lightdm.conf.d/10-autologin.conf<<EOF
@@ -310,6 +311,8 @@ snap list --all | grep desactivado | awk '{print \$1 "," \$3}' | for f in \`cat\
 
 EOF
 
+    # Permisos més "amigables" per defecte
+    printf '\numask 0002\n' >> /etc/bash.bashrc
 }
 
 #

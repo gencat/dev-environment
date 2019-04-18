@@ -4,8 +4,11 @@
 
 log "Configurant usuari canigo ..."
 
-# rm -fr /home/canigo || die 1
-# mkdir -p /home/canigo && cd /home/canigo || die 2
+if [ -d /home/canigo ]; then
+
+    rm -fr /home/canigo || die 1
+    mkdir -p /home/canigo || die 8
+fi
 
 cd /home || die 2
 
@@ -26,5 +29,11 @@ tar -xvJf $_RESOURCES/.jedit.tar.xz --overwrite -C /home/canigo || die 6
 
 # FIX INTCAN-1792 Problemes integració plugin de Canigó
 ln -s /opt/apache-maven-*/conf/settings.xml /home/canigo/.m2/settings.xml || die 7
+
+# FIX Keyboard xset rate https://askubuntu.com/a/1014269/507470
+sed -i -E 's:r rate [0-9]+ [0-9]+:r rate 300 50:' /home/canigo/.config/autostart/LXinput-setup.desktop
+
+# Històricament a Documents/ hi havia el workspace, i per aquest motiu es crea un enllaç
+ln -s /opt/workspaces/workspace-canigo /home/canigo/Documents/workspace-canigo
 
 chown -R canigo:canigo /home/canigo

@@ -10,6 +10,8 @@ unalias -a
  alias rm='rm -i'
 # alias cp='cp -i'
 # alias mv='mv -i'
+# Canigó: Millora de seguretat...
+ alias chmod='chmod --preserve-root -c'
 #
 # Default to human readable figures
  alias df='df -h'

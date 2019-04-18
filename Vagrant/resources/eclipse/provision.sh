@@ -63,3 +63,5 @@ marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro
 
 tar -xvJf $_RESOURCES/eclipse-conf-patch.tar.xz -C /opt
 tar -xvJf $_RESOURCES/workspaces.tar.xz -C /opt
+
+# WARNING :: Si hi ha canvis de la ruta del WORKSPACE s'ha de canviar també a /resources/home_canigo/provision.sh
