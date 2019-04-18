@@ -300,7 +300,6 @@ EOF
 
     log 'Auto-neteja...'
 
-    chmod +x /etc/cron.weekly/canigo.cleanup
 cat>/etc/cron.weekly/canigo.cleanup<<EOF
 #!/bin/sh
 #
@@ -310,6 +309,7 @@ cat>/etc/cron.weekly/canigo.cleanup<<EOF
 snap list --all | grep desactivado | awk '{print \$1 "," \$3}' | for f in \`cat\` ; do __APP=\$(echo \$f | cut -f1 -d,); __REV=\$(echo \$f | cut -f2 -d,) ; echo \$__APP \$__REV ; snap remove \$__APP --revision \$__REV ; done
 
 EOF
+    chmod +x /etc/cron.weekly/canigo.cleanup
 
     # Permisos més "amigables" per defecte
     printf '\numask 0002\n' >> /etc/bash.bashrc

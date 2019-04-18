@@ -4,11 +4,11 @@
 
 log "Configurant usuari canigo ..."
 
-if [ -d /home/canigo ]; then
-
-    rm -fr /home/canigo || die 1
-    mkdir -p /home/canigo || die 8
-fi
+#if [ -d /home/canigo ]; then
+#
+#    rm -fr /home/canigo || die 1
+#    mkdir -p /home/canigo || die 8
+#fi
 
 cd /home || die 2
 
