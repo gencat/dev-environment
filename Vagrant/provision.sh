@@ -49,7 +49,8 @@ EOF
         #yes | mkfs.ext4 -T small -m0 /dev/sdd1
         yes | mkfs.ext4 -m0 /dev/sdd1
 
-        egrep '/opt|/dev/sdd1' /etc/fstab || echo '/dev/sdd1   /opt    ext4  rw,defaults,noatime,noacl,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500   0 0' >> /etc/fstab
+        mkdir -p /mnt/datadisk
+        egrep '/mnt/datadisk|/dev/sdd1' /etc/fstab || echo '/dev/sdd1   /mnt/datadisk    ext4  rw,defaults,noatime,noacl,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500   0 0' >> /etc/fstab
 
         log 'Optimitzant FS ...'
 
@@ -65,7 +66,12 @@ EOF
         # optimització de SDA1 durant la instal·lació
         mount -o remount,rw,defaults,noatime,noacl,nouser_xattr,barrier=0,commit=3600,delalloc,max_batch_time=150000,min_batch_time=1500 /dev/sda1 /
 
-        mount /opt
+        mount /mnt/datadisk
+        mv /opt /opt.old
+        mkdir -p /mnt/datadisk/opt
+        ln -s /mnt/datadisk/opt /opt
+
+        mv -t /opt /opt.old/*
 
         log 'Inicialitzat disc de dades'
     fi
@@ -252,8 +258,8 @@ EOF
 
     log 'Actualizant permisos ...'
 
-    chown -R canigo:canigo /opt
-    chmod o-rwx /opt
+    chown -R canigo:canigo /mnt/datadisk/opt
+    chmod o-rwx /mnt/datadisk/opt
 
     # autologin canigo
 cat>/etc/lightdm/lightdm.conf.d/10-autologin.conf<<EOF
