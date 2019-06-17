@@ -27,6 +27,8 @@ cp -vfr $_RESOURCES/resources/.[a-z]* /home/canigo || die 5
 
 tar -xvJf $_RESOURCES/.jedit.tar.xz --overwrite -C /home/canigo || die 6
 
+mkdir /home/canigo/Documents /home/canigo/Downloads
+
 # FIX INTCAN-1792 Problemes integració plugin de Canigó
 ln -s /opt/apache-maven-*/conf/settings.xml /home/canigo/.m2/settings.xml || die 7
 
@@ -34,6 +36,9 @@ ln -s /opt/apache-maven-*/conf/settings.xml /home/canigo/.m2/settings.xml || die
 sed -i -E 's:r rate [0-9]+ [0-9]+:r rate 300 50:' /home/canigo/.config/autostart/LXinput-setup.desktop
 
 # Històricament a Documents/ hi havia el workspace, i per aquest motiu es crea un enllaç
-ln -s /opt/workspaces/workspace-canigo /home/canigo/Documents/workspace-canigo
+ln -s /opt/workspaces/workspace-canigo /home/canigo/Documents/workspace-canigo || die 8
+
+# FIX Informació .desktop des-alineada amb la versió que es pot instal·lar via snap
+ln -s /var/lib/snapd/desktop/applications/code_code.desktop /home/canigo/Desktop/code_code.desktop || die 9
 
 chown -R canigo:canigo /home/canigo

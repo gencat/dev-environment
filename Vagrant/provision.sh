@@ -5,6 +5,9 @@
 REBOOT_SLEEP=10
 LOG_FILE=/vagrant/provision.sh.log
 
+# https://unix.stackexchange.com/questions/146283/how-to-prevent-prompt-that-ask-to-restart-services-when-installing-libpq-dev
+export DEBIAN_FRONTEND=noninteractive
+
 pwd
 
 . /vagrant/resources/provision-common.sh || exit 127
@@ -76,7 +79,7 @@ EOF
         log 'Inicialitzat disc de dades'
     fi
 
-    log 'Optimitzant seguretat ...'
+    log 'Optimitzant sistema ...'
 
     systemctl stop apparmor
     systemctl disable apparmor
@@ -93,18 +96,20 @@ EOF
 
     ufw disable
 
+    apt update || die 1
+
     if [ ! "$DISABLE_VBOX_GUEST_ADD" = '1' ]; then
 
         # https://www.vagrantup.com/docs/virtualbox/boxes.html
         log 'Instal·lant de VirtualBox Guest Additions ...'
 
-        _apt_get install linux-headers-$(uname -r) build-essential dkms
+        _apt_get install linux-headers-$(uname -r) build-essential dkms || die 2
 
         VBOX_VERSION=$(VBoxService | head -1 | cut -f2 -d" " | cut -f1 -d_)
 
         log "Reported VirtualBox version : $VBOX_VERSION"
 
-        wget -nv http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
+        wget -nv http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso || die 3
         mkdir /media/VBoxGuestAdditions
         mount -o loop,ro VBoxGuestAdditions_$VBOX_VERSION.iso /media/VBoxGuestAdditions
         echo yes | sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run --nox11
@@ -115,6 +120,12 @@ EOF
         log 'Instal·lat VirtualBox Guest Additions'
     fi
 
+    # https://www.techrepublic.com/article/how-to-disable-ipv6-on-linux/
+    log 'Deshabilitant IPv6'
+
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
     log 'Creant user canigo ...'
 
     #Create canigo user
@@ -123,11 +134,15 @@ EOF
     usermod -s /bin/bash canigo
 
     adduser canigo sudo
+    adduser canigo vboxsf
 
     # Clonar grups de l'usuari ubuntu
     for f in `grep ubuntu /etc/group | grep -v canigo | cut -f1 -d: | grep -v ubuntu` ; do
         adduser canigo $f
     done
+
+    # sudo sense password
+    echo 'canigo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/canigo
 
     log 'Creat user canigo'
 }
@@ -147,9 +162,9 @@ fase2 () {
         sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
     fi
 
-    apt update
-
     log 'Preparant instal·lació ...'
+
+    apt update
 
     PACKAGE_INSTALL_LIST="visualvm"
     PACKAGE_INSTALL_LIST="$PACKAGE_INSTALL_LIST openjdk-8-jdk openjdk-8-source"
@@ -211,6 +226,7 @@ fase3 () {
     docker-compose --version || die 2
     curl -L https://raw.githubusercontent.com/docker/compose/1.23.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
+    # do_install https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb || die 3
     do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz || die 3
     do_install https://languagetool.org/download/LanguageTool-4.5.zip || die 3
     do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
@@ -231,8 +247,8 @@ fase3 () {
     log 'Instal·lant software aprovisionat per script propi ...'
 
     for f in maven eclipse jedit ; do
-        cd `dirname $0`
-        sh resources/$f/provision.sh || die 5 "$f"
+        cd /tmp
+        bash /vagrant/resources/$f/provision.sh || die 5 "$f"
     done
 
 }
@@ -254,7 +270,7 @@ BACKSPACE="guess"
 EOF
 
     cd `dirname $0`
-    sh resources/home_canigo/provision.sh || die 1
+    sh /vagrant/resources/home_canigo/provision.sh || die 1
 
     log 'Actualizant permisos ...'
 
@@ -336,6 +352,8 @@ main () {
     sync
 
     log "Entorn de desenvolupament configurat. Aturant en 5 segons..." | tee -a $LOG_FILE
+
+    uptime | tee -a $LOG_FILE
 
     sleep 5
 

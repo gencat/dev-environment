@@ -50,7 +50,7 @@ do_install () {
     [ -f $_BN ] && echo $_BN | egrep '\.zip$' && unzip $_BN && rm $_BN
     [ -f $_BN ] && echo $_BN | egrep '\.xz$' && unxz $_BN && rm $_BN
     [ -f $_BN ] && echo $_BN | egrep '\.bz$' && bzip2 -d $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.deb$' && apt install $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.deb$' && apt install -y $_BN && rm $_BN
 
     [ -f $_BN ] && die 2 'Fitxer no reconegut'
 
@@ -75,4 +75,13 @@ do_install2 () {
     [ -z $_URL ] && die 2
 
     do_install $_URL
+}
+
+wait4jobs () {
+
+    while true; do
+        jobs >/dev/null
+        jobs -r | wc -l | grep -q ^0 && break
+        sleep 3
+    done
 }
