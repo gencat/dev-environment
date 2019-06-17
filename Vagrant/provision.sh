@@ -3,7 +3,7 @@
 # DISABLE_VBOX_GUEST_ADD=1
 # DISABLE_INSTALL_SOFTWARE=1
 REBOOT_SLEEP=10
-LOG_FILE=/vagrant/resources/provision.sh.log
+LOG_FILE=/vagrant/provision.sh.log
 
 pwd
 
@@ -74,6 +74,8 @@ EOF
 
     systemctl stop apparmor
     systemctl disable apparmor
+
+    apparmor_parser -R /etc/apparmor.d/* 2> /dev/null
 
     aa-status
 
@@ -161,8 +163,8 @@ fase2 () {
 
     log "Software base: $PACKAGE_INSTALL_LIST"
 
-    # _apt_get install $PACKAGE_INSTALL_LIST && apt -y upgrade || die 5
-    _apt_get install $PACKAGE_INSTALL_LIST || die 5
+    # _apt_get install $PACKAGE_INSTALL_LIST && apt -y upgrade || die 1
+    _apt_get install $PACKAGE_INSTALL_LIST || die 1
 
     # S'ha instal·lat com a dependència. S'elimina
     _apt_get remove openjdk-11-jre openjdk-11-jre-headless
@@ -192,7 +194,7 @@ fase3 () {
     log "Configuració de docker ..."
 
     #Add canigo user to docker group
-    sudo gpasswd -a canigo docker || die 6
+    sudo gpasswd -a canigo docker || die 1
     sudo service docker restart
 
     log "Instal·lant docker-compose ..."
@@ -200,51 +202,31 @@ fase3 () {
     # https://docs.docker.com/compose/install/
     curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    docker-compose --version || die 7
+    docker-compose --version || die 2
     curl -L https://raw.githubusercontent.com/docker/compose/1.23.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
-    do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
-    do_install https://languagetool.org/download/LanguageTool-4.5.zip
-    do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz
-    do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz
-    do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz
-    do_install https://www-eu.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip
+    do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz || die 3
+    do_install https://languagetool.org/download/LanguageTool-4.5.zip || die 3
+    do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
+    do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz || die 3
+    do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz || die 3
+    do_install https://archive.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip || die 3
+    # do_install2 'http://groovy-lang.org/download.html' 'https://.*apache-groovy-binary-2.5.*' || die 3
 
     log 'Installing Node 8.x & 10.x versions ...'
 
-    do_install https://nodejs.org/dist/v8.15.1/node-v8.15.1-linux-x64.tar.gz
-    do_install https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.gz
-
-    # Postman no instal·lat per no tenir llicència aplicable
-
-    # log 'Instal.lant Postman ...'
-
-    # cd /opt
-    # wget -nv https://dl.pstmn.io/download/latest/linux64
-    # tar -xzf linux64
-    # rm linux64
+    do_install https://nodejs.org/dist/v8.15.1/node-v8.15.1-linux-x64.tar.gz || die 3
+    do_install https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.gz || die 3
 
     log 'Instal·lant VS Studio ...'
 
-    # # page scrapping "d'anar per casa"
-    #
-    # cd $(mktemp -d) ; pwd
-    # lynx -dump https://code.visualstudio.com/docs/setup/linux | fgrep '/go.microsoft.com/fwlink/?LinkID=' | cut -f3- -d' ' | for f in `cat`; do
-    #     wget -nv $f
-    # done
-    #
-    # for f in `file * | fgrep 'Debian binary package' | cut -f1 -d:` ; do
-    #     mv $f vs-code.deb && apt install ./vs-code.deb
-    # done
-
-    # BETA 4 : Instal·lació per snap
-    snap install code --classic
+    snap install code --classic || die 4
 
     log 'Instal·lant software aprovisionat per script propi ...'
 
     for f in maven eclipse jedit ; do
         cd `dirname $0`
-        sh resources/$f/provision.sh || die 8
+        sh resources/$f/provision.sh || die 5 "$f"
     done
 
 }
@@ -266,7 +248,7 @@ BACKSPACE="guess"
 EOF
 
     cd `dirname $0`
-    sh resources/home_canigo/provision.sh || die 9
+    sh resources/home_canigo/provision.sh || die 1
 
     log 'Actualizant permisos ...'
 
@@ -327,29 +309,33 @@ main () {
 
     log "FASE 1/4 :: Configuració inicial del sistema" | tee -a $LOG_FILE
 
-    fase1 |& tee /dev/tty1 >> $LOG_FILE || die 1
+    fase1 |& tee /dev/tty1 >> $LOG_FILE
+    [ ${PIPESTATUS[0]} -eq 0 ] || die 1
 
     log "FASE 2/4 :: Instal·lació i configuració de software base" | tee -a $LOG_FILE
 
-    fase2 |& tee /dev/tty1 >> $LOG_FILE || die 2
+    fase2 |& tee /dev/tty1 >> $LOG_FILE
+    [ ${PIPESTATUS[0]} -eq 0 ] || die 2
 
     log "FASE 3/4 :: Instal·lació i configuració de software addicional" | tee -a $LOG_FILE
 
-    fase3 |& tee /dev/tty1 >> $LOG_FILE || die 3
+    fase3 |& tee /dev/tty1 >> $LOG_FILE
+    [ ${PIPESTATUS[0]} -eq 0 ] || die 3
 
     log "FASE 4/4 :: Configuració final del sistema" | tee -a $LOG_FILE
 
-    fase4 |& tee /dev/tty1 >> $LOG_FILE || die 4
+    fase4 |& tee /dev/tty1 >> $LOG_FILE
+    [ ${PIPESTATUS[0]} -eq 0 ] || die 4
 
     sync
 
-    log "Entorn de desenvolupament configurat. Reiniciant en 5 segons..." | tee -a $LOG_FILE
+    log "Entorn de desenvolupament configurat. Aturant en 5 segons..." | tee -a $LOG_FILE
 
     sleep 5
 
     # exit 0
 
-    reboot
+    poweroff
 }
 
 if [ $USER = "root" ] ; then

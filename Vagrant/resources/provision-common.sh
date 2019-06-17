@@ -42,14 +42,37 @@ do_install () {
     log "Instal.lant $_BN ..."
 
     cd /opt
-    wget -nv $1
+    wget -nv $1 || die 1
 
-    echo $_BN | egrep '\.tar\.gz$' && tar -xzvf $_BN
-    echo $_BN | egrep '\.tar\.xz$' && tar -xJvf $_BN
-    echo $_BN | egrep '\.tgz$' && tar -xzvf $_BN
-    echo $_BN | egrep '\.zip$' && unzip $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.tar\.gz$' && tar -xzvf $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.tar\.xz$' && tar -xJvf $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.tgz$' && tar -xzvf $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.zip$' && unzip $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.xz$' && unxz $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.bz$' && bzip2 -d $_BN && rm $_BN
+    [ -f $_BN ] && echo $_BN | egrep '\.deb$' && apt install $_BN && rm $_BN
 
-    rm $_BN
+    [ -f $_BN ] && die 2 'Fitxer no reconegut'
 
     log "Instal.lat $_BN"
+}
+
+# Fa un "page scrapping" d'una pàgina (normalment una pàgina de descàrrega) i descarrega un arxiu per a la seva instal·lació.
+#
+# @param 1
+#       URL on cercar l'enllaç de descàrrega
+# @param 2
+#       REGEXP que ha de tenir l'enllaç de descàrrega
+do_install2 () {
+
+    log "Accedint a $1 ..."
+
+    local __TMP=/tmp/do_install2-$$.html.tmp
+
+    lynx -dump $1 > $__TMP || die 1
+
+    _URL=$(egrep -o $2 $__TMP | egrep '\.(zip|gz|tgz|xz|bz|bz2)$' | head -1)
+    [ -z $_URL ] && die 2
+
+    do_install $_URL
 }
