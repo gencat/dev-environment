@@ -88,6 +88,12 @@ EOF
 
     aa-status
 
+    # FIX /tmp ha d'apuntar a /mnt/datadisk/tmp (principalment per temes d'espai)
+    mkdir /mnt/datadisk/tmp
+    chmod --reference /tmp /mnt/datadisk/tmp
+    mv /tmp /tmp2 || die 1
+    ln -s /mnt/datadisk/tmp /tmp || die 2
+
     echo 'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT apparmor=0"'  | tee /etc/default/grub.d/apparmor.cfg
     # https://wiki.tizen.org/Security:Smack#How_to_disable_SMACK.3F
     echo 'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT security=none"' | tee /etc/default/grub.d/security.cfg
@@ -96,20 +102,20 @@ EOF
 
     ufw disable
 
-    apt update || die 1
+    apt update || die 3
 
     if [ ! "$DISABLE_VBOX_GUEST_ADD" = '1' ]; then
 
         # https://www.vagrantup.com/docs/virtualbox/boxes.html
         log 'Instal·lant de VirtualBox Guest Additions ...'
 
-        _apt_get install linux-headers-$(uname -r) build-essential dkms || die 2
+        _apt_get install linux-headers-$(uname -r) build-essential dkms || die 4
 
         VBOX_VERSION=$(VBoxService | head -1 | cut -f2 -d" " | cut -f1 -d_)
 
         log "Reported VirtualBox version : $VBOX_VERSION"
 
-        wget -nv http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso || die 3
+        wget -nv http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso || die 5
         mkdir /media/VBoxGuestAdditions
         mount -o loop,ro VBoxGuestAdditions_$VBOX_VERSION.iso /media/VBoxGuestAdditions
         echo yes | sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run --nox11
@@ -314,6 +320,11 @@ snap list --all | grep desactivado | awk '{print \$1 "," \$3}' | for f in \`cat\
 
 EOF
     chmod +x /etc/cron.weekly/canigo.cleanup
+
+cat | crontab - <<EOF
+# Neteja de /tmp (fitxers i directoris més antics de 10 minuts)
+@reboot find -H /tmp -maxdepth 1 -cmin +10 -exec rm -fr '{}' ';'
+EOF
 
     # Permisos més "amigables" per defecte
     printf '\numask 0002\n' >> /etc/bash.bashrc

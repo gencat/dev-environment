@@ -26,17 +26,15 @@ export MAVEN_OPTS="-Djava.net.preferIPv4Stack=true -Dsun.net.client.defaultConne
 
 cd $TEMPO_DIR;
 
-$MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DartifactId=AppCanigo -DgroupId=cat.gencat.ctti -Dversion=1.0
-$MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DarchetypeVersion=1.6.2 -DartifactId=AppCanigo162 -DgroupId=cat.gencat.ctti -Dversion=1.0
+$MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DarchetypeVersion=LATEST -DartifactId=AppCanigo -DgroupId=cat.gencat.ctti -Dversion=1.0
 
-cd $TEMPO_DIR/AppCanigo;
+cd AppCanigo
+
 $MAVEN_HOME/bin/mvn -B clean package failsafe:integration-test
+$MAVEN_HOME/bin/mvn -B dependency:resolve -Dclassifier=sources
+$MAVEN_HOME/bin/mvn -B dependency:resolve -Dclassifier=javadoc
 EOF
 
 chown -R canigo:canigo $TEMPO_DIR
 
 su - canigo -c "bash $TEMPO_DIR/mvn-run.sh"
-
-# su - canigo -c "cd $TEMPO_DIR; $MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DartifactId=AppCanigo -DgroupId=cat.gencat.ctti -Dversion=1.0"
-# su - canigo -c "cd $TEMPO_DIR; $MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DarchetypeVersion=1.6.2 -DartifactId=AppCanigo162 -DgroupId=cat.gencat.ctti -Dversion=1.0"
-# su - canigo -c "cd $TEMPO_DIR/AppCanigo; $MAVEN_HOME/bin/mvn -B clean package failsafe:integration-test"

@@ -8,6 +8,25 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+export GIT_SSH=/usr/bin/ssh
+export GIT_EDITOR="vim"
+
+export JAVA_HOME8=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME11=/opt/jdk-11.0.2
+export JAVA_HOME=$JAVA_HOME8
+
+# export JAVA_OPTS="-verbose:gc"
+export JAVA_OPTS="$JAVA_OPTS -Xms256m -Djava.net.preferIPv4Stack=true"
+
+export NODE_V8=/opt/node-v8.15.1-linux-x64
+export NODE_V10=/opt/node-v10.15.3-linux-x64
+
+# MAVEN
+export M2_HOME=/opt/apache-maven*
+export MAVEN_HOME=$M2_HOME
+export MAVEN_OPTS="$MAVEN_OPTS -Xmx1024m -Dsun.net.client.defaultConnectTimeout=60000 -Dsun.net.client.defaultReadTimeout=30000"
+export MAVEN_OPTS="$JAVA_OPTS $MAVEN_OPTS"
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
@@ -30,21 +49,4 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
-
-export GIT_SSH=/usr/bin/ssh
-export GIT_EDITOR="vim"
-
-export JAVA_HOME8=/usr/lib/jvm/java-8-openjdk-amd64
-export JAVA_HOME11=/opt/jdk-11.0.2
-export JAVA_HOME=$JAVA_HOME8
-
-# export JAVA_OPTS="-verbose:gc"
-export JAVA_OPTS="$JAVA_OPTS -Xms256m -Xmx1024m"
-
-export NODE_V8=/opt/node-v8.15.1-linux-x64
-export NODE_V10=/opt/node-v10.15.3-linux-x64
-
-# MAVEN
-export M2_HOME=/opt/apache-maven*
-export MAVEN_HOME=$M2_HOME
 
