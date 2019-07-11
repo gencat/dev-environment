@@ -42,17 +42,44 @@ do_install () {
     log "Instal.lant $_BN ..."
 
     cd /opt
-    wget -nv $1 || die 1
 
-    [ -f $_BN ] && echo $_BN | egrep '\.tar\.gz$' && tar -xzvf $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.tar\.xz$' && tar -xJvf $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.tgz$' && tar -xzvf $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.zip$' && unzip $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.xz$' && unxz $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.bz$' && bzip2 -d $_BN && rm $_BN
-    [ -f $_BN ] && echo $_BN | egrep '\.deb$' && apt install -y $_BN && rm $_BN
+    _decompress () {
 
-    [ -f $_BN ] && die 2 'Fitxer no reconegut'
+        [ -f $1 ] || die 1 "Fitxer $1 no trobat"
+
+        if [ $( echo $1 | egrep -q '\.tar\.gz$' ; echo $? ) -eq 0 ] ; then
+            tar -xzvf $1
+        elif [ $( echo $1 | egrep -q '\.tar\.xz$' ; echo $? ) -eq 0 ] ; then
+            tar -xJvf $1
+        elif [ $( echo $1 | egrep -q '\.tgz$' ; echo $? ) -eq 0 ] ; then
+            tar -xzvf $1
+        elif [ $( echo $1 | egrep -q '\.zip$' ; echo $? ) -eq 0 ] ; then
+            unzip $1
+        elif [ $( echo $1 | egrep -q '\.xz$' ; echo $? ) -eq 0 ] ; then
+            unxz $1
+        elif [ $( echo $1 | egrep -q '\.bz$' ; echo $? ) -eq 0 ] ; then
+            bzip2 -d $1
+        elif [ $( echo $1 | egrep -q '\.deb$' ; echo $? ) -eq 0 ] ; then
+            apt install -y $1
+        else
+            die 4 "Fitxer $1 no reconegut"
+        fi
+
+    }
+
+    if [ -f $_BN ]; then
+
+        log "S'utilitza el fitxer $_BN present prèviament"
+
+        _decompress $_BN || die 2
+
+    else
+        wget -nv $1 || die 1
+
+        _decompress $_BN || die 3
+
+        rm $_BN
+    fi
 
     log "Instal.lat $_BN"
 }

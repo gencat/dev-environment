@@ -240,6 +240,7 @@ fase3 () {
     do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz || die 3
     do_install https://archive.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip || die 3
     # do_install2 'http://groovy-lang.org/download.html' 'https://.*apache-groovy-binary-2.5.*' || die 3
+    do_install https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.21/bin/apache-tomcat-9.0.21.tar.gz || die 3
 
     log 'Installing Node 8.x & 10.x versions ...'
 
