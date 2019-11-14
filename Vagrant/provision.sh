@@ -237,7 +237,7 @@ fase3 () {
     do_install https://languagetool.org/download/LanguageTool-4.5.zip || die 3
     do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
     do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz || die 3
-    do_install https://www-eu.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.1.tgz || die 3
+    do_install https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.1.1.tgz || die 3
     do_install https://archive.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip || die 3
     # do_install2 'http://groovy-lang.org/download.html' 'https://.*apache-groovy-binary-2.5.*' || die 3
     do_install https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.21/bin/apache-tomcat-9.0.21.tar.gz || die 3
