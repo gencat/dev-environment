@@ -235,7 +235,8 @@ fase3 () {
     # do_install https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb || die 3
     do_install https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz || die 3
     do_install https://languagetool.org/download/LanguageTool-4.5.zip || die 3
-    do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
+    # do_install https://dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
+    do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/dbeaver.io/files/6.0.2/dbeaver-ce-6.0.2-linux.gtk.x86_64.tar.gz || die 3
     do_install https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz || die 3
     do_install https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.1.1.tgz || die 3
     do_install https://archive.apache.org/dist/groovy/2.5.6/distribution/apache-groovy-binary-2.5.6.zip || die 3
