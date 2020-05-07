@@ -2,11 +2,13 @@
 
 . /vagrant/resources/provision-common.sh || exit 127
 
-do_install https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+# do_install https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz || die 1
+
 
 log "Configurant Maven ..."
 
-cd /opt/apache-maven-* || die 1
+cd /opt/apache-maven-* || die 2
 
 export MAVEN_HOME=$PWD
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64

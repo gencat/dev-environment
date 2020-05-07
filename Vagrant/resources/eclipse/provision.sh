@@ -4,7 +4,8 @@
 
 cd /opt
 
-do_install https://download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz || die 1
+# do_install https://download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz || die 1
+do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz || die 1
 
 log "Configurant Eclipse ..."
 
@@ -29,7 +30,8 @@ marketplace_install_cli () {
     MID=$(echo $URL | egrep -o '=[0-9]+$' | cut -f2 -d=)
 
     rm p 2>/dev/null
-    wget -nv https://marketplace.eclipse.org/node/$MID/api/p || die 3
+    # wget -nv https://marketplace.eclipse.org/node/$MID/api/p || die 3
+    wget -nv https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/marketplace.eclipse.org/node/$MID/api/p || die 3
 
     UPDATE_URL=$(egrep -i '<updateurl.*</updateurl>' p | egrep -o '>[^<]+' | cut -c2-)
     PARAMS="-repository $UPDATE_URL"
