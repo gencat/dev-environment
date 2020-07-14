@@ -53,7 +53,7 @@ multi_cp $_RESOURCES/splash.bmp ./plugins/org.eclipse.platform_*/splash.bmp ./pl
 
 cp -vfr $_RESOURCES/icon.xpm .
 
-./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director -repository 'http://repos.canigo.ctti.gencat.cat/repository/maven2/cat/gencat/ctti/canigo.plugin/update-site/' -installIU cat.gencat.ctti.canigo.feature.feature.group || die 5
+./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director -repository 'https://hudson.intranet.gencat.cat/nexus/repository/canigo-group-maven2/cat/gencat/ctti/canigo.plugin/update-site/' -installIU cat.gencat.ctti.canigo.feature.feature.group || die 5
 
 # Sonarlint
 marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=2568658' || die 6
@@ -66,7 +66,9 @@ marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro
 # mv /tmp/t5/sts-4.2.0.RELEASE.new/ /tmp/t5/sts-4.2.0.RELEASE
 # cd /tmp/t5 ; tar -cvJf eclipse-conf-patch2.tar.xz sts-4.2.0.RELEASE
 
-for f in eclipse-conf-patch.tar.xz workspaces.tar.xz eclipse-conf-patch2.tar.xz ; do
+cat split_eclipse-conf-patch* > eclipse-conf-patch.tar.xz
+
+for f in eclipse-conf-patch.tar.xz workspaces.tar.xz ; do
     log "Treballant amb l'arxiu $f ..."
     tar -xJf $_RESOURCES/$f -C /opt
 done
