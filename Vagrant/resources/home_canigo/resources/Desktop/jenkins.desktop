@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Name=Jenkins SIC
-Type=Link
-URL=http://hudson.intranet.gencat.cat/hudson/
+Type=Application
+Exec=firefox https://icdc.sic.intranet.gencat.cat/
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico
