@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=SoapUI 5.5
+Name=SoapUI 5.7.0
 Type=Application
-Exec=/opt/SoapUI-5.5.0/bin/soapui.sh
+Exec=/opt/SoapUI-5.7.0/bin/soapui.sh
 Icon=/home/canigo/Pictures/SoapUI-Logo-Green.png
 NoDisplay=false
 Categories=Development;IDE;

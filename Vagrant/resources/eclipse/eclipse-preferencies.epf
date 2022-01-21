@@ -54,11 +54,13 @@
 /instance/org.eclipse.help.base/search_from_browser=false
 /instance/org.eclipse.help.base/window_infopop=false
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.builder.resourceCopyExclusionFilter=
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.ECLIPSE_HOME=/opt/sts-4.2.0.RELEASE/
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JRE_LIB=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JRE_SRC=/usr/lib/jvm/java-8-openjdk-amd64/src.zip
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JRE_SRCROOT=
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JUNIT_HOME=/opt/sts-4.2.0.RELEASE/plugins/org.junit_4.12.0.v201504281640/
+/instance/org.eclipse.jdt.core/JRE_LIB=/usr/lib/jvm/java-11-openjdk-amd64/lib/jrt-fs.jar
+/instance/org.eclipse.jdt.core/JRE_SRC=/usr/lib/jvm/java-11-openjdk-amd64/lib/src.zip
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JRE_LIB=/usr/lib/jvm/java-11-openjdk-amd64/lib/jrt-fs.jar
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JRE_SRC=/usr/lib/jvm/java-11-openjdk-amd64/lib/src.zip
+/instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_VM_XML=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<vmSettings defaultVM\="57,org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType13,1642696888681">\n    <vmType id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType">\n        <vm id\="1642696888681" javadocURL\="https\://docs.oracle.com/en/java/javase/11/docs/api/" name\="java-11-openjdk-amd64" path\="/usr/lib/jvm/java-11-openjdk-amd64"/>\n    </vmType>\n</vmSettings>\n
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.ECLIPSE_HOME=/opt/sts-4.13.0.RELEASE/
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.JUNIT_HOME=/opt/sts-4.13.0.RELEASE/plugins/org.junit_4.12.0.v201504281640/
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.classpathVariable.M2_REPO=/home/canigo/.m2/repository
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.argumentPrefixes=
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.argumentSuffixes=
@@ -72,12 +74,12 @@
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.staticFinalFieldSuffixes=
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.codeComplete.visibilityCheck=enabled
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance=1.8
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.codegen.targetPlatform=11
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance=11
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.release=disabled
-/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.source=1.8
+/instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.source=11
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration=1
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment=true
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment=true
@@ -116,7 +118,7 @@
 /instance/org.eclipse.jdt.junit/org.eclipse.jdt.junit.show_in_all_views=false
 /instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_CONNECT_TIMEOUT=20000
 /instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_DEFAULT_ENVIRONMENTS_XML=
-/instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_VM_XML=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<vmSettings defaultVM\="57,org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType13,1555412649214">\n<vmType id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType">\n<vm id\="1555412649214" name\="java-8-openjdk-amd64" path\="/usr/lib/jvm/java-8-openjdk-amd64"/>\n<vm id\="1555414335303" name\="jdk-11.0.2" path\="/opt/jdk-11.0.2"/>\n</vmType>\n</vmSettings>\n
+/instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.PREF_VM_XML=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<vmSettings defaultVM\="57,org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType13,1555412649214">\n<vmType id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType">\n<vm id\="1555412649214" name\="java-11-openjdk-amd64" path\="/usr/lib/jvm/java-11-openjdk-amd64"/>\n<vm id\="1555414335303" name\="jdk-11.0.2" path\="/opt/jdk-11.0.2"/>\n</vmType>\n</vmSettings>\n
 /instance/org.eclipse.jdt.launching/org.eclipse.jdt.launching.only_include_exported_classpath_entries=false
 /instance/org.eclipse.jdt.ui/breadcrumb.org.eclipse.jdt.ui.JavaPerspective=true
 /instance/org.eclipse.jdt.ui/cleanup.add_default_serial_version_id=true

@@ -2,6 +2,6 @@
 Version=1.0
 Name=Jenkins SIC
 Type=Link
-URL=http://hudson.intranet.gencat.cat/hudson/
+URL=https://icdc.sic.intranet.gencat.cat/
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

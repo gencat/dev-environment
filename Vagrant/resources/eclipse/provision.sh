@@ -1,57 +1,56 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-. /vagrant/resources/provision-common.sh || exit 127
+# shellcheck disable=SC1091
+source /vagrant/resources/provision-common.sh || exit 127
 
-cd /opt
+cd /opt || exit
 
-# do_install https://download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz || die 1
-do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/download.springsource.com/release/STS4/4.2.0.RELEASE/dist/e4.11/spring-tool-suite-4-4.2.0.RELEASE-e4.11.0-linux.gtk.x86_64.tar.gz || die 1
+# do_install https://download.springsource.com/release/STS4/4.13.0.RELEASE/dist/e4.22/spring-tool-suite-4-4.13.0.RELEASE-e4.22.0-linux.gtk.x86_64.tar.gz || die 1
+do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/download.springsource.com/release/STS4/4.13.0.RELEASE/dist/e4.22/spring-tool-suite-4-4.13.0.RELEASE-e4.22.0-linux.gtk.x86_64.tar.gz || die 1
 
 log "Configurant Eclipse ..."
 
-cd sts-4.2* || die 2
+cd sts-4.13* || die 2
 
 #
 # cp to multiple targets
 #
-multi_cp () {
-    local SRC=$1
-    shift
-    /bin/ls -d $* | xargs -L1 cp -vfr $SRC
+function multi_cp () {
+  local SRC="${1}"
+  shift
+  /bin/ls -d $* | xargs -L1 cp -vfr "${SRC}"
 }
 
 #
 # @param 1 URL
 # @see https://stackoverflow.com/a/52887282/97799
 #
-marketplace_install_cli () {
+function marketplace_install_cli () {
+  local -r URL="${1}"
+  local -r MID=$(echo "${URL}" | grep -E -o '=[0-9]+$' | cut -f2 -d=)
 
-    URL=$1
-    MID=$(echo $URL | egrep -o '=[0-9]+$' | cut -f2 -d=)
+  rm p 2>/dev/null
+  # wget -nv https://marketplace.eclipse.org/node/$MID/api/p || die 3
+  wget -nv "https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/marketplace.eclipse.org/node/${MID}/api/p" || die 3
 
-    rm p 2>/dev/null
-    # wget -nv https://marketplace.eclipse.org/node/$MID/api/p || die 3
-    wget -nv https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/marketplace.eclipse.org/node/$MID/api/p || die 3
+  local -r UPDATE_URL=$(grep -E -i '<updateurl.*</updateurl>' p | grep -E -o '>[^<]+' | cut -c2-)
+  local -r IUS=$(grep -e '<iu.*</iu>' p | grep -E -o '>[^<]+' | cut -c2-)
+  local PARAMS="-repository ${UPDATE_URL}"
+  rm p
+  for iu in $IUS ; do
+    PARAMS="${PARAMS} -installIU ${iu}"
+  done
 
-    UPDATE_URL=$(egrep -i '<updateurl.*</updateurl>' p | egrep -o '>[^<]+' | cut -c2-)
-    PARAMS="-repository $UPDATE_URL"
+  log "marketplace_install_cli ${URL} :: [${PARAMS}]"
 
-    IUS=$(egrep '<iu.*</iu>' p | egrep -o '>[^<]+' | cut -c2-)
-    rm p
-    for iu in $IUS ; do
-        PARAMS="$PARAMS -installIU $iu"
-    done
-
-    log "marketplace_install_cli $URL :: [$PARAMS]"
-
-    ./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director $PARAMS || die 4
+  ./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director $PARAMS || die 4
 }
 
-_RESOURCES=/vagrant/resources/eclipse
+declare -r _RESOURCES=/vagrant/resources/eclipse
 
-multi_cp $_RESOURCES/splash.bmp ./plugins/org.eclipse.platform_*/splash.bmp ./plugins/org.springframework.boot.ide.branding_*/splash.bmp
-
-cp -vfr $_RESOURCES/icon.xpm .
+multi_cp "${_RESOURCES}/splash.bmp" ./plugins/org.springframework.boot.ide.branding_*/splash.bmp
+cp -vfr "${_RESOURCES}/splash.bmp" ./plugins/org.eclipse.platform_*/
+cp -vfr "${_RESOURCES}/icon.xpm" .
 
 ./SpringToolSuite4 -nosplash -application org.eclipse.equinox.p2.director -repository 'https://hudson.intranet.gencat.cat/nexus/repository/canigo-group-maven2/cat/gencat/ctti/canigo.plugin/update-site/' -installIU cat.gencat.ctti.canigo.feature.feature.group || die 5
 
@@ -68,9 +67,9 @@ marketplace_install_cli 'http://marketplace.eclipse.org/marketplace-client-intro
 
 cat split_eclipse-conf-patch* > eclipse-conf-patch.tar.xz
 
-for f in eclipse-conf-patch.tar.xz workspaces.tar.xz ; do
-    log "Treballant amb l'arxiu $f ..."
-    tar -xJf $_RESOURCES/$f -C /opt
+for file in eclipse-conf-patch.tar.xz workspaces.tar.xz ; do
+  log "Treballant amb l'arxiu ${file} ..."
+  tar -xJf "${_RESOURCES}/${file}" -C /opt
 done
 
 # WARNING :: Si hi ha canvis de la ruta del WORKSPACE s'ha de canviar també a /resources/home_canigo/provision.sh

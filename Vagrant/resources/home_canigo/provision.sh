@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-. /vagrant/resources/provision-common.sh || exit 127
+# shellcheck disable=SC1091
+source /vagrant/resources/provision-common.sh || exit 127
 
 log "Configurant usuari canigo ..."
 
 #if [ -d /home/canigo ]; then
-#
-#    rm -fr /home/canigo || die 1
-#    mkdir -p /home/canigo || die 8
+#  rm -fr /home/canigo || die 1
+#  mkdir -p /home/canigo || die 8
 #fi
 
 cd /home || die 2
@@ -18,16 +18,17 @@ cd /home || die 2
 # mkdir t1; cp -r [D-V]* .[c-l]* .mozilla/ .pki/ .[s-x]* .Xauthority .xsession-errors* t1
 # cd ..
 
-_RESOURCES=/vagrant/resources/home_canigo
+declare -r _RESOURCES=/vagrant/resources/home_canigo
 
-tar -xvJf $_RESOURCES/init.tar.xz --overwrite -C /home || die 3
+tar -xvJf ${_RESOURCES}/init.tar.xz --overwrite -C /home || die 3
+cp -vfr ${_RESOURCES}/resources/* /home/canigo || die 4
+cp -vfr ${_RESOURCES}/resources/.[a-z]* /home/canigo || die 5
+tar -xvJf ${_RESOURCES}/.jedit.tar.xz --overwrite -C /home/canigo || die 6
 
-cp -vfr $_RESOURCES/resources/* /home/canigo || die 4
-cp -vfr $_RESOURCES/resources/.[a-z]* /home/canigo || die 5
+for folder in Documents Downloads Music Templates Videos ; do mkdir "/home/canigo/${folder}" ; done
 
-tar -xvJf $_RESOURCES/.jedit.tar.xz --overwrite -C /home/canigo || die 6
-
-for f in Documents Downloads Music Templates Videos; do mkdir /home/canigo/$f; done
+# ADD Desktop icons
+cp /home/canigo/Desktop /home/canigo/.local/share/applications/
 
 # FIX INTCAN-1792 Problemes integració plugin de Canigó
 ln -s /opt/apache-maven-*/conf/settings.xml /home/canigo/.m2/settings.xml || die 7
