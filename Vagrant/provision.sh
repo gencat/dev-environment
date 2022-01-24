@@ -167,6 +167,7 @@ function fase2() {
   apt update
 
   local -r PACKAGE_INSTALL_LIST="\
+  lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings\
   visualvm\
   openjdk-8-jdk openjdk-8-source\
   openjdk-11-jdk openjdk-11-source openjdk-11-doc\
@@ -185,23 +186,19 @@ function fase2() {
   apache2 libapache2-mod-auth-openid libapache2-mod-auth-openidc"
 
   log "Software base: ${PACKAGE_INSTALL_LIST}"
-
   _apt_get "install ${PACKAGE_INSTALL_LIST}" || die 1
 
-  log 'Configurant Language"...'
+  log 'Configurant Language ...'
   update-locale LANG=ca_ES.UTF-8 LC_MESSAGES=POSIX
 
-  log 'Configurant aplicacions de sistema...'
-
-  log 'Configurant Firefox...'
-  # Per defecte Firefox (en comptes de Chrome)
-  update-alternatives --set x-www-browser /usr/bin/firefox
-
-  # Per defecte JDK 11
+  log 'Configurant JDK 11 per defecte ...'
   update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
   update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-amd64/bin/javac
   update-alternatives --set jar /usr/lib/jvm/java-11-openjdk-amd64/bin/jar
 
+  log 'Configurant Firefox ...'
+  # Per defecte Firefox (en comptes de Chrome)
+  update-alternatives --set x-www-browser /usr/bin/firefox
   # Català per defecte per Firefox
   echo 'pref("intl.locale.requested", "ca,en-US-u-va-posix");' >>/etc/firefox/syspref.js
 }
@@ -210,8 +207,7 @@ function fase2() {
 # Fase 3 de l'aprovisionament
 #
 function fase3() {
-  log "Configuració de docker ..."
-
+  log "Configurant docker ..."
   #Add canigo user to docker group
   gpasswd -a canigo docker || die 1
   service docker restart
@@ -258,9 +254,11 @@ function fase3() {
 # Fase 4 de l'aprovisionament
 #
 function fase4() {
+  log 'Deshabilitant missatges de benvinguda ...'
   # https://www.cyberciti.biz/faq/how-to-disable-ssh-motd-welcome-message-on-ubuntu-linux/
   /bin/ls -1 /etc/update-motd.d/* | grep -v 00-header | xargs chmod -x
 
+  log 'Configurant teclat amb variant català ...'
   cat >/etc/default/keyboard <<EOF
 XKBMODEL="pc105"
 XKBLAYOUT="es"
@@ -276,30 +274,39 @@ EOF
   chown -R canigo:canigo /mnt/datadisk/opt
   chmod o-rwx /mnt/datadisk/opt
 
-  # autologin canigo
+  log 'Configuració de autologin ...'
+  cat > /etc/X11/default-display-manager << EOF
+/usr/bin/lightdm
+EOF
+  dpkg-reconfigure -f noninteractive lightdm
+
   cat >/etc/lightdm/lightdm.conf.d/10-autologin.conf <<EOF
 [Seat:*]
 autologin-guest = false
 autologin-user = canigo
 autologin-user-timeout = 0
+autologin-session=Lubuntu
 
 [SeatDefaults]
 allow-guest = false
+user-session = Lubuntu
+greeter-session = lightdm-gtk-greeter
+greeter-hide-users = true
 EOF
 
   log 'Deshabilitant actualitzacions automàtiques ...'
-
-  # https://linuxconfig.org/disable-automatic-updates-on-ubuntu-18-04-bionic-beaver-linux
+  # https://linuxconfig.org/disable-automatic-updates-on-ubuntu-20-04-focal-fossa-linux
   cat >/etc/apt/apt.conf.d/20auto-upgrades <<EOF
 APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Download-Upgradeable-Packages "0";
+APT::Periodic::AutocleanInterval "0";
 APT::Periodic::Unattended-Upgrade "1";
 EOF
 
   # Disable (graphical) automatic updates
-  for f in /usr/bin/update-manager /usr/bin/update-notifier; do
-    mv $f $f.bak
-    ln -s /bin/true $f
-  done
+  declare -r notifierCommand=/usr/lib/lubuntu-update-notifier/lubuntu-upg-notifier.sh
+  mv "${notifierCommand}" "${notifierCommand}.bak"
+  ln -s /bin/true "${notifierCommand}"
 
   log 'Auto-neteja...'
   cat >/etc/cron.weekly/canigo.cleanup <<EOF
@@ -321,6 +328,9 @@ EOF
 
   # Permisos més "amigables" per defecte
   printf '\numask 0002\n' >>/etc/bash.bashrc
+
+  # set wallpaper
+  sed -i 's:Exec=pcmanfm-qt --desktop --profile=lxqt:Exec=pcmanfm-qt --desktop --profile=lxqt --set-wallpaper /home/canigo/Pictures/fonspantalla_1280.png:g' /etc/xdg/autostart/lxqt-desktop.desktop
 }
 
 #

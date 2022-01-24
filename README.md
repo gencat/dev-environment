@@ -30,6 +30,6 @@ Informació a <https://canigo.ctti.gencat.cat/canigo/entorn-desenvolupament/>
 1. Tomcat 9.0.55
 1. jEdit 5.5.0 - Editor de textos (més lleuger que VS Code) basat en Java. Recomanable per a l’edició de fitxers grans (logs).
 1. IDE - Spring Tool Suite 4.13.0, i els següents plugins:
-   * Plugin CTTI Canigó per creació aplicacions Canigó 3.4 basades en arquitectura REST+HTML5/JS.
+   * Plugin CTTI Canigó per creació aplicacions Canigó 3.6.x basades en arquitectura REST+HTML5/JS.
    * Spring Tool Suite per facilitar el desenvolupament d’aplicacions basades en Spring.
    * SonarLint permet detectar i solucionar problemes de qualitat al codi SonarLint.

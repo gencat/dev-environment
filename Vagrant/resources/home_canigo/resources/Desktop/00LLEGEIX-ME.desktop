@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=LLEGEIX-ME
-Type=Link
-URL=http://canigo.ctti.gencat.cat/canigo/entorn-desenvolupament/
+Type=Application
+Exec=firefox http://canigo.ctti.gencat.cat/canigo/entorn-desenvolupament/
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

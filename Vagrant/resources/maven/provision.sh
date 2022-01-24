@@ -46,4 +46,4 @@ EOF
 
 chown -R canigo:canigo "${TEMPO_DIR}"
 
-su - canigo -c "bash ${TEMPO_DIR}/mvn-run.sh"
+su - canigo -c "bash ${TEMPO_DIR}/mvn-run.sh || true"

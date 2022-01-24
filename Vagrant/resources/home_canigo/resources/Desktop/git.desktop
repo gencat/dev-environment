@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Git Gencat
-Type=Link
-URL=https://git.intranet.gencat.cat
+Type=Application
+Exec=firefox https://git.intranet.gencat.cat
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

@@ -118,6 +118,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# setxkbmap -layout 'es,es' -model pc105
 java11
 node16

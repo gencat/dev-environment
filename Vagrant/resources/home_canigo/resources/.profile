@@ -27,23 +27,23 @@ export MAVEN_OPTS="$JAVA_OPTS $MAVEN_OPTS"
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
+  # include .bashrc if it exists
+  if [ -f "$HOME/.bashrc" ]; then
+	  . "$HOME/.bashrc"
+  fi
 fi
 
 # afegir al PATH groovy i apache
 for f in `/bin/ls -d /opt/groovy* /opt/apache*` ; do
-    export PATH="$f/bin:$PATH"
+  export PATH="$f/bin:$PATH"
 done
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+   PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+  PATH="$HOME/.local/bin:$PATH"
 fi
