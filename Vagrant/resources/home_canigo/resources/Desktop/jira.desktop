@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=CSTD. Suport al desenvolupament
-Type=Link
-URL=https://cstd.ctti.gencat.cat/jiracstd
+Type=Application
+Exec=firefox https://cstd.ctti.gencat.cat/jiracstd
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

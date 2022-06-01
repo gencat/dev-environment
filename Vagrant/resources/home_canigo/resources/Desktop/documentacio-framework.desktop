@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Documentació Framework
-Type=Link
-URL=http://canigo.ctti.gencat.cat/canigo-documentacio-versions-3x/
+Type=Application
+Exec=firefox http://canigo.ctti.gencat.cat/canigo-documentacio-versions-3x/
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

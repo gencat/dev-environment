@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Name=Web Canigó
-Type=Link
-URL=http://canigo.ctti.gencat.cat
+Type=Application
+Exec=firefox http://canigo.ctti.gencat.cat
 #Icon=text-html
 Icon=/home/canigo/Pictures/favicon.ico

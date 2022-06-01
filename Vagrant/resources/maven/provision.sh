@@ -1,42 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-. /vagrant/resources/provision-common.sh || exit 127
+# shellcheck disable=SC1091
+source /vagrant/resources/provision-common.sh || exit 127
 
-# do_install https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
-do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz || die 1
-
+# do_install https://archive.apache.org/dist/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
+do_install https://sic.ctti.extranet.gencat.cat/nexus/content/groups/canigo-public-raw/archive.apache.org/dist/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz || die 1
 
 log "Configurant Maven ..."
 
 cd /opt/apache-maven-* || die 2
 
-export MAVEN_HOME=$PWD
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=$JAVA_HOME/bin:$PATH
+update-alternatives --install /usr/bin/mvn mvn /opt/apache-maven-3.8.5/bin/mvn 100
 
-_RESOURCES=/vagrant/resources/maven
+declare -r _RESOURCES=/vagrant/resources/maven
 
-cp -vfr $_RESOURCES/settings.xml ./conf/
+cp -vfr "${_RESOURCES}/settings.xml" ./conf/
 
-# su - canigo -c "$MAVEN_HOME/bin/mvn help:help clean:help war:help site:help deploy:help install:help compiler:help surefire:help failsafe:help eclipse:help"
+# To get mvn plugin help and check settings
+#su - canigo -c "mvn help:help clean:help war:help site:help deploy:help install:help compiler:help surefire:help failsafe:help eclipse:help"
 
-cd $(mktemp -d) ; pwd
-TEMPO_DIR=$PWD
+cd "$(mktemp -d)" || exit ; pwd
+declare -r TEMPO_DIR=$PWD
 
-cat<<EOF>$TEMPO_DIR/mvn-run.sh
+cat<<EOF > "${TEMPO_DIR}"/mvn-run.sh
+
+# https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html
 export MAVEN_OPTS="-Djava.net.preferIPv4Stack=true -Dsun.net.client.defaultConnectTimeout=60000 -Dsun.net.client.defaultReadTimeout=30000"
 
-cd $TEMPO_DIR;
+cd ${TEMPO_DIR};
 
-$MAVEN_HOME/bin/mvn -B archetype:generate -DarchetypeGroupId=cat.gencat.ctti -DarchetypeArtifactId=plugin-canigo-archetype-rest -DarchetypeVersion=LATEST -DartifactId=AppCanigo -DgroupId=cat.gencat.ctti -Dversion=1.0
+mvn -B archetype:generate \
+  -DarchetypeGroupId=cat.gencat.ctti \
+  -DarchetypeArtifactId=plugin-canigo-archetype-rest \
+  -DarchetypeVersion=LATEST \
+  -DartifactId=AppCanigo \
+  -DgroupId=cat.gencat.ctti \
+  -Dversion=1.0
 
 cd AppCanigo
 
-$MAVEN_HOME/bin/mvn -B clean package failsafe:integration-test
-$MAVEN_HOME/bin/mvn -B dependency:resolve -Dclassifier=sources
-$MAVEN_HOME/bin/mvn -B dependency:resolve -Dclassifier=javadoc
+mvn -B clean package failsafe:integration-test
+mvn -B dependency:resolve -Dclassifier=sources
+mvn -B dependency:resolve -Dclassifier=javadoc
 EOF
 
-chown -R canigo:canigo $TEMPO_DIR
+chown -R canigo:canigo "${TEMPO_DIR}"
 
-su - canigo -c "bash $TEMPO_DIR/mvn-run.sh"
+su - canigo -c "bash ${TEMPO_DIR}/mvn-run.sh || true"

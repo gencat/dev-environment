@@ -42,5 +42,5 @@ unalias -a
  alias java8='export JAVA_HOME=$JAVA_HOME8; export PATH=$JAVA_HOME/bin:$PATH'
  alias java11='export JAVA_HOME=$JAVA_HOME11; export PATH=$JAVA_HOME/bin:$PATH'
 ## Entorns node
- alias node8='export PATH=$NODE_V8/bin:$PATH'
- alias node10='export PATH=$NODE_V10/bin:$PATH'
+ alias node14='export PATH=$NODE_V14/bin:$PATH'
+ alias node16='export PATH=$NODE_V16/bin:$PATH'
